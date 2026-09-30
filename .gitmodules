@@ -1,0 +1,11 @@
+[submodule "FlagGems"]
+	path = FlagGems
+	url = https://github.com/braveloop/FlagGems.git
+	branch = bravegpuwinner/s2-dev
+[submodule "vllm-plugin-FL"]
+	path = vllm-plugin-FL
+	url = https://github.com/braveloop/vllm-plugin-FL.git
+	branch = bravegpuwinner/s2-dev
+[submodule "vllm"]
+	path = vllm
+	url = https://github.com/vllm-project/vllm.git

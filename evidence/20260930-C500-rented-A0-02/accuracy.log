@@ -1,0 +1,1343 @@
+2026-09-30 23:28:52 - evalscope - [32mINFO[0m: Args: Task config is provided with CommandLine type.[0m
+2026-09-30 23:28:52 - evalscope - [33mWARNING[0m: Deprecated: The `timeout` parameter is deprecated and will be removed in v2.0.0. Use `generation_config.timeout` instead.[0m
+2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Running with native backend[0m
+2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Dump task config to /workspace/evalscope-datasets/level3/20260930_232920/configs/task_config.yaml[0m
+2026-09-30 23:29:20 - evalscope - [32mINFO[0m: {
+    "model_id": "minicpm",
+    "model_args": {},
+    "model_task": "text_generation",
+    "chat_template": null,
+    "datasets": [
+        "math_500"
+    ],
+    "dataset_args": {
+        "math_500": {
+            "dataset_id": "/workspace/evalscope-datasets/math_500",
+            "subset_list": [
+                "Level 3"
+            ]
+        }
+    },
+    "dataset_dir": "/root/.cache/modelscope/hub/datasets",
+    "dataset_hub": "modelscope",
+    "repeats": 1,
+    "eval_type": "openai_api",
+    "eval_backend": "Native",
+    "eval_config": null,
+    "limit": null,
+    "eval_batch_size": 8,
+    "use_cache": null,
+    "rerun_review": false,
+    "work_dir": "/workspace/evalscope-datasets/level3/20260930_232920",
+    "no_timestamp": false,
+    "enable_progress_tracker": false,
+    "ignore_errors": true,
+    "debug": false,
+    "seed": 42,
+    "api_url": "http://127.0.0.1:9031/v1/chat/completions",
+    "api_key": "**********",
+    "timeout": 3600.0,
+    "stream": null,
+    "judge": {
+        "strategy": "auto",
+        "models": [],
+        "contract": {
+            "system_prompt": null,
+            "prompt_template": null,
+            "score_mapping": null,
+            "score_type": "pattern"
+        },
+        "repeats": 1,
+        "position_swap": "auto",
+        "aggregation": "mean",
+        "min_valid_judges": 1
+    },
+    "analysis_report": false,
+    "collect_perf": true,
+    "use_sandbox": false,
+    "sandbox_type": "docker",
+    "sandbox_manager_config": {},
+    "evalscope_version": "1.11.1",
+    "model": "minicpm",
+    "generation_config": {
+        "timeout": 3600.0,
+        "batch_size": 8,
+        "max_tokens": 32768,
+        "top_p": 0.95,
+        "temperature": 1.0
+    },
+    "sandbox": {
+        "enabled": false,
+        "engine": "docker",
+        "default_config": {},
+        "manager_config": {},
+        "pool_size": null
+    },
+    "agent_config": null
+}[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]                                                           2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Start loading benchmark dataset: math_500[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]                                                           2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Loading dataset /workspace/evalscope-datasets/math_500 from local > subset: default > split: test ...[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Generating test split: 0 examples [00:00, ? examples/s][AGenerating test split: 500 examples [00:00, 66565.69 examples/s]
+
+Processing records:   0%|          | 0/500 [00:00<?, ?it/s][AProcessing records: 100%|██████████| 500/500 [00:00<00:00, 198556.33it/s]
+                                                           2026-09-30 23:29:20 - evalscope - [32mINFO[0m: math_500: 105 samples to evaluate (1 subset)[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]                                                           2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Subsets of math_500: ['Level 3'][0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Loading model for prediction...[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Creating model minicpm with eval_type=openai_api base_url=http://127.0.0.1:9031/v1/chat/completions, config={'timeout': 3600.0, 'retries': 5, 'retry_interval': 10, 'batch_size': 8, 'max_tokens': 32768, 'top_p': 0.95, 'temperature': 1.0, 'anthropic_cache_strategy': 'evaluation'}, model_args={}[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:20 - evalscope - [32mINFO[0m: Model loaded successfully.[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A2026-09-30 23:29:20,794 - openai._base_client - INFO: Retrying request to /chat/completions in 0.420072 seconds
+2026-09-30 23:29:20,794 - openai._base_client - INFO: Retrying request to /chat/completions in 0.496874 seconds
+2026-09-30 23:29:20,794 - openai._base_client - INFO: Retrying request to /chat/completions in 0.465621 seconds
+2026-09-30 23:29:20,794 - openai._base_client - INFO: Retrying request to /chat/completions in 0.472099 seconds
+2026-09-30 23:29:20,794 - openai._base_client - INFO: Retrying request to /chat/completions in 0.407941 seconds
+2026-09-30 23:29:20,795 - openai._base_client - INFO: Retrying request to /chat/completions in 0.415413 seconds
+2026-09-30 23:29:20,795 - openai._base_client - INFO: Retrying request to /chat/completions in 0.388478 seconds
+2026-09-30 23:29:20,795 - openai._base_client - INFO: Retrying request to /chat/completions in 0.489133 seconds
+2026-09-30 23:29:21,185 - openai._base_client - INFO: Retrying request to /chat/completions in 0.894520 seconds
+2026-09-30 23:29:21,204 - openai._base_client - INFO: Retrying request to /chat/completions in 0.992551 seconds
+2026-09-30 23:29:21,212 - openai._base_client - INFO: Retrying request to /chat/completions in 0.945341 seconds
+2026-09-30 23:29:21,215 - openai._base_client - INFO: Retrying request to /chat/completions in 0.873661 seconds
+2026-09-30 23:29:21,262 - openai._base_client - INFO: Retrying request to /chat/completions in 0.993366 seconds
+2026-09-30 23:29:21,268 - openai._base_client - INFO: Retrying request to /chat/completions in 0.950291 seconds
+2026-09-30 23:29:21,285 - openai._base_client - INFO: Retrying request to /chat/completions in 0.837529 seconds
+2026-09-30 23:29:21,293 - openai._base_client - INFO: Retrying request to /chat/completions in 0.863765 seconds
+                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:22 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:02<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A2026-09-30 23:29:32,082 - openai._base_client - INFO: Retrying request to /chat/completions in 0.472445 seconds
+2026-09-30 23:29:32,091 - openai._base_client - INFO: Retrying request to /chat/completions in 0.426342 seconds
+2026-09-30 23:29:32,126 - openai._base_client - INFO: Retrying request to /chat/completions in 0.398821 seconds
+2026-09-30 23:29:32,161 - openai._base_client - INFO: Retrying request to /chat/completions in 0.499188 seconds
+2026-09-30 23:29:32,161 - openai._base_client - INFO: Retrying request to /chat/completions in 0.399273 seconds
+2026-09-30 23:29:32,199 - openai._base_client - INFO: Retrying request to /chat/completions in 0.412733 seconds
+2026-09-30 23:29:32,221 - openai._base_client - INFO: Retrying request to /chat/completions in 0.457469 seconds
+2026-09-30 23:29:32,257 - openai._base_client - INFO: Retrying request to /chat/completions in 0.480565 seconds
+2026-09-30 23:29:32,518 - openai._base_client - INFO: Retrying request to /chat/completions in 0.760697 seconds
+2026-09-30 23:29:32,525 - openai._base_client - INFO: Retrying request to /chat/completions in 0.915851 seconds
+2026-09-30 23:29:32,555 - openai._base_client - INFO: Retrying request to /chat/completions in 0.976814 seconds
+2026-09-30 23:29:32,561 - openai._base_client - INFO: Retrying request to /chat/completions in 0.975821 seconds
+2026-09-30 23:29:32,612 - openai._base_client - INFO: Retrying request to /chat/completions in 0.788126 seconds
+2026-09-30 23:29:32,661 - openai._base_client - INFO: Retrying request to /chat/completions in 0.849068 seconds
+2026-09-30 23:29:32,679 - openai._base_client - INFO: Retrying request to /chat/completions in 0.798218 seconds
+2026-09-30 23:29:32,739 - openai._base_client - INFO: Retrying request to /chat/completions in 0.817567 seconds
+                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:12<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:12<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:33 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A2026-09-30 23:29:43,282 - openai._base_client - INFO: Retrying request to /chat/completions in 0.432971 seconds
+2026-09-30 23:29:43,403 - openai._base_client - INFO: Retrying request to /chat/completions in 0.378361 seconds
+2026-09-30 23:29:43,443 - openai._base_client - INFO: Retrying request to /chat/completions in 0.452683 seconds
+2026-09-30 23:29:43,480 - openai._base_client - INFO: Retrying request to /chat/completions in 0.430995 seconds
+2026-09-30 23:29:43,512 - openai._base_client - INFO: Retrying request to /chat/completions in 0.396324 seconds
+2026-09-30 23:29:43,535 - openai._base_client - INFO: Retrying request to /chat/completions in 0.422685 seconds
+2026-09-30 23:29:43,539 - openai._base_client - INFO: Retrying request to /chat/completions in 0.392287 seconds
+2026-09-30 23:29:43,559 - openai._base_client - INFO: Retrying request to /chat/completions in 0.427831 seconds
+2026-09-30 23:29:43,716 - openai._base_client - INFO: Retrying request to /chat/completions in 0.823857 seconds
+2026-09-30 23:29:43,782 - openai._base_client - INFO: Retrying request to /chat/completions in 0.988544 seconds
+2026-09-30 23:29:43,897 - openai._base_client - INFO: Retrying request to /chat/completions in 0.943025 seconds
+2026-09-30 23:29:43,909 - openai._base_client - INFO: Retrying request to /chat/completions in 0.927653 seconds
+2026-09-30 23:29:43,912 - openai._base_client - INFO: Retrying request to /chat/completions in 0.980052 seconds
+2026-09-30 23:29:43,934 - openai._base_client - INFO: Retrying request to /chat/completions in 0.941802 seconds
+2026-09-30 23:29:43,958 - openai._base_client - INFO: Retrying request to /chat/completions in 0.974750 seconds
+2026-09-30 23:29:43,987 - openai._base_client - INFO: Retrying request to /chat/completions in 0.930507 seconds
+                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:44 - evalscope - [33mWARNING[0m: Attempt 3 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:24<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:24<?, ?it/s][A2026-09-30 23:29:54,542 - openai._base_client - INFO: Retrying request to /chat/completions in 0.420539 seconds
+2026-09-30 23:29:54,773 - openai._base_client - INFO: Retrying request to /chat/completions in 0.454396 seconds
+2026-09-30 23:29:54,839 - openai._base_client - INFO: Retrying request to /chat/completions in 0.453727 seconds
+2026-09-30 23:29:54,842 - openai._base_client - INFO: Retrying request to /chat/completions in 0.473812 seconds
+2026-09-30 23:29:54,878 - openai._base_client - INFO: Retrying request to /chat/completions in 0.466628 seconds
+2026-09-30 23:29:54,894 - openai._base_client - INFO: Retrying request to /chat/completions in 0.382918 seconds
+2026-09-30 23:29:54,920 - openai._base_client - INFO: Retrying request to /chat/completions in 0.418996 seconds
+2026-09-30 23:29:54,935 - openai._base_client - INFO: Retrying request to /chat/completions in 0.423859 seconds
+2026-09-30 23:29:54,963 - openai._base_client - INFO: Retrying request to /chat/completions in 0.957215 seconds
+2026-09-30 23:29:55,228 - openai._base_client - INFO: Retrying request to /chat/completions in 0.817718 seconds
+2026-09-30 23:29:55,278 - openai._base_client - INFO: Retrying request to /chat/completions in 0.959149 seconds
+2026-09-30 23:29:55,294 - openai._base_client - INFO: Retrying request to /chat/completions in 0.905136 seconds
+2026-09-30 23:29:55,317 - openai._base_client - INFO: Retrying request to /chat/completions in 0.752619 seconds
+2026-09-30 23:29:55,340 - openai._base_client - INFO: Retrying request to /chat/completions in 0.840000 seconds
+2026-09-30 23:29:55,345 - openai._base_client - INFO: Retrying request to /chat/completions in 0.860763 seconds
+2026-09-30 23:29:55,360 - openai._base_client - INFO: Retrying request to /chat/completions in 0.828846 seconds
+                                                           
+                                                             [A2026-09-30 23:29:55 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:35<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:29:56 - evalscope - [33mWARNING[0m: Attempt 4 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:36<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:35<?, ?it/s][A2026-09-30 23:30:05,923 - openai._base_client - INFO: Retrying request to /chat/completions in 0.394644 seconds
+2026-09-30 23:30:06,048 - openai._base_client - INFO: Retrying request to /chat/completions in 0.403000 seconds
+2026-09-30 23:30:06,072 - openai._base_client - INFO: Retrying request to /chat/completions in 0.471369 seconds
+2026-09-30 23:30:06,183 - openai._base_client - INFO: Retrying request to /chat/completions in 0.495987 seconds
+2026-09-30 23:30:06,191 - openai._base_client - INFO: Retrying request to /chat/completions in 0.460568 seconds
+2026-09-30 23:30:06,201 - openai._base_client - INFO: Retrying request to /chat/completions in 0.466532 seconds
+2026-09-30 23:30:06,209 - openai._base_client - INFO: Retrying request to /chat/completions in 0.473627 seconds
+2026-09-30 23:30:06,240 - openai._base_client - INFO: Retrying request to /chat/completions in 0.382136 seconds
+2026-09-30 23:30:06,318 - openai._base_client - INFO: Retrying request to /chat/completions in 0.780908 seconds
+2026-09-30 23:30:06,452 - openai._base_client - INFO: Retrying request to /chat/completions in 0.921331 seconds
+2026-09-30 23:30:06,544 - openai._base_client - INFO: Retrying request to /chat/completions in 0.836140 seconds
+2026-09-30 23:30:06,622 - openai._base_client - INFO: Retrying request to /chat/completions in 0.901092 seconds
+2026-09-30 23:30:06,652 - openai._base_client - INFO: Retrying request to /chat/completions in 0.771363 seconds
+2026-09-30 23:30:06,668 - openai._base_client - INFO: Retrying request to /chat/completions in 0.885287 seconds
+2026-09-30 23:30:06,679 - openai._base_client - INFO: Retrying request to /chat/completions in 0.933780 seconds
+2026-09-30 23:30:06,683 - openai._base_client - INFO: Retrying request to /chat/completions in 0.938343 seconds
+                                                           
+                                                             [A2026-09-30 23:30:07 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:47<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:47<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:30:07 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:47<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:47<?, ?it/s][A
+Evaluating[math_500]:   1%|          | 1/105 [00:47<1:21:29, 47.02s/it][A2026-09-30 23:30:07,431 - openai._base_client - INFO: Retrying request to /chat/completions in 0.429829 seconds
+                                                           
+                                                                       [A2026-09-30 23:30:07 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:47<?, ?benchmark/s]
+Evaluating[math_500]:   1%|          | 1/105 [00:47<1:21:29, 47.02s/it][A                                                           
+                                                                       [A2026-09-30 23:30:07 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:47<?, ?benchmark/s]
+Evaluating[math_500]:   1%|          | 1/105 [00:47<1:21:29, 47.02s/it][A2026-09-30 23:30:07,435 - openai._base_client - INFO: Retrying request to /chat/completions in 0.467157 seconds
+                                                           
+                                                                       [A2026-09-30 23:30:07 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:47<?, ?benchmark/s]
+Evaluating[math_500]:   2%|▏         | 2/105 [00:47<1:20:42, 47.02s/it][A                                                           
+                                                                       [A2026-09-30 23:30:07 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:47<?, ?benchmark/s]
+Evaluating[math_500]:   2%|▏         | 2/105 [00:47<1:20:42, 47.02s/it][A2026-09-30 23:30:07,438 - openai._base_client - INFO: Retrying request to /chat/completions in 0.426927 seconds
+2026-09-30 23:30:07,862 - openai._base_client - INFO: Retrying request to /chat/completions in 0.775544 seconds
+2026-09-30 23:30:07,865 - openai._base_client - INFO: Retrying request to /chat/completions in 0.900150 seconds
+2026-09-30 23:30:07,903 - openai._base_client - INFO: Retrying request to /chat/completions in 0.945170 seconds
+                                                           
+                                                                       [A2026-09-30 23:30:08 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   3%|▎         | 3/105 [00:48<1:19:55, 47.02s/it][A                                                           
+                                                                       [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   3%|▎         | 3/105 [00:48<1:19:55, 47.02s/it][A
+Evaluating[math_500]:   4%|▍         | 4/105 [00:48<15:25,  9.17s/it]  [A2026-09-30 23:30:08,441 - openai._base_client - INFO: Retrying request to /chat/completions in 0.375308 seconds
+                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   4%|▍         | 4/105 [00:48<15:25,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   4%|▍         | 4/105 [00:48<15:25,  9.17s/it][A2026-09-30 23:30:08,445 - openai._base_client - INFO: Retrying request to /chat/completions in 0.436309 seconds
+                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   5%|▍         | 5/105 [00:48<15:16,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   5%|▍         | 5/105 [00:48<15:16,  9.17s/it][A2026-09-30 23:30:08,449 - openai._base_client - INFO: Retrying request to /chat/completions in 0.488636 seconds
+                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   6%|▌         | 6/105 [00:48<15:07,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   6%|▌         | 6/105 [00:48<15:07,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [31mERROR[0m: Processing item in subset='Level 3' failed: Connection error.
+Traceback:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 101, in handle_request
+    raise exc
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 78, in handle_request
+    stream = self._connect(request)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 124, in _connect
+    stream = self._network_backend.connect_tcp(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 207, in connect_tcp
+    with map_exceptions(exc_map):
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1037, in request
+    response = self._send_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 440, in _send_request
+    return self._send_with_auth_retry(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_client.py", line 418, in _send_with_auth_retry
+    response = super()._send_request(request, stream=stream, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 964, in _send_request
+    return self._client.send(request, stream=stream, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/opt/conda/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ConnectError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 256, in run_in_threads_with_progress
+    result = fut.result()
+             ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/opt/conda/lib/python3.12/concurrent/futures/thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 211, in _worker_with_loop_cleanup
+    return worker(item)
+           ^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 333, in worker
+    return self._process_work_item(item, context.model_prediction_dir)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 377, in _process_work_item
+    task_state = self._predict_sample(item.sample, model_prediction_dir) if item.needs_predict else item.task_state
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/evaluator/evaluator.py", line 516, in _predict_sample
+    task_state = self.benchmark.run_inference(model=self.model, sample=sample, output_dir=model_prediction_dir)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 554, in run_inference
+    result = self._on_inference(model, sample)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/benchmark/adapters/default_data_adapter.py", line 441, in _on_inference
+    model_output = model.generate(input=sample.input, tools=sample.tools)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/api/model/model.py", line 202, in generate
+    output = self.api.generate(
+             ^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 183, in generate
+    completion, ttft = retry_call(
+                       ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/utils/function_utils.py", line 90, in retry_call
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/evalscope/models/openai_compatible.py", line 177, in _create_and_collect
+    raw_completion = self.client.chat.completions.create(**request)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1215, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1332, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/openai/_base_client.py", line 1072, in request
+    raise APIConnectionError(request=request) from err
+openai.APIConnectionError: Connection error.
+[0m
+2026-09-30 23:30:08,453 - openai._base_client - INFO: Retrying request to /chat/completions in 0.494110 seconds
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   7%|▋         | 7/105 [00:48<14:58,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Error ignored, continuing with next sample.[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   7%|▋         | 7/105 [00:48<14:58,  9.17s/it][A2026-09-30 23:30:08,455 - openai._base_client - INFO: Retrying request to /chat/completions in 0.486294 seconds
+                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:48<14:49,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:48<14:49,  9.17s/it][A2026-09-30 23:30:08,817 - openai._base_client - INFO: Retrying request to /chat/completions in 0.843138 seconds
+                                                           
+                                                                     [A2026-09-30 23:30:08 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:48<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:48<14:49,  9.17s/it][A2026-09-30 23:30:08,882 - openai._base_client - INFO: Retrying request to /chat/completions in 0.801980 seconds
+2026-09-30 23:30:08,939 - openai._base_client - INFO: Retrying request to /chat/completions in 0.894460 seconds
+2026-09-30 23:30:08,942 - openai._base_client - INFO: Retrying request to /chat/completions in 0.984118 seconds
+2026-09-30 23:30:08,948 - openai._base_client - INFO: Retrying request to /chat/completions in 0.904595 seconds
+                                                           
+                                                                     [A2026-09-30 23:30:09 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:49<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:49<14:49,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:09 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:49<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:49<14:49,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:09 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:49<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:49<14:49,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:09 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:49<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:49<14:49,  9.17s/it][A                                                           
+                                                                     [A2026-09-30 23:30:09 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:49<?, ?benchmark/s]
+Evaluating[math_500]:   8%|▊         | 8/105 [00:49<14:49,  9.17s/it][A2026-09-30 23:30:18,640 - openai._base_client - INFO: Retrying request to /chat/completions in 0.375485 seconds
+2026-09-30 23:30:18,768 - openai._base_client - INFO: Retrying request to /chat/completions in 0.433861 seconds
+2026-09-30 23:30:18,852 - openai._base_client - INFO: Retrying request to /chat/completions in 0.378615 seconds
+2026-09-30 23:30:19,016 - openai._base_client - INFO: Retrying request to /chat/completions in 0.784805 seconds
+2026-09-30 23:30:19,202 - openai._base_client - INFO: Retrying request to /chat/completions in 0.997130 seconds
+2026-09-30 23:30:19,232 - openai._base_client - INFO: Retrying request to /chat/completions in 0.819820 seconds

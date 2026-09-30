@@ -1,0 +1,18 @@
+# Build output
+build/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Sphinx auto-generated
+source/locales/
+
+# Generated operator detail pages (build artifacts)
+references/generated/*.md
+!references/generated/.gitkeep
+
+# Backup files
+*.bak
+*.bak.*

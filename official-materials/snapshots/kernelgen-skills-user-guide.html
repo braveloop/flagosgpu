@@ -1,0 +1,813 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="KernelGen Skills 用户指南" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.flagos.io/projects/kernelgen/zh-cn/latest/skills_user_guide/skills-user-guide.html" />
+<meta property="og:site_name" content="KernelGen Documentation" />
+<meta property="og:description" content="本节介绍如何使用 VSCode（及 Copilot）、Claude Code 和 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集，并使用 KernelGen Skills 进行算子的通用生成。 有关为 FlagGems 或 vLLM 项目生成 Kernel、优化 Kernel以及跨硬件平台特化 Kernel 的使用案例，请参见 KernelGen Skills 使用案例 。 前提条件: 智能体客户端版本：- Claude Code 2.1 及更高版本, OpenClaw 2026.3.2 及更高版本, 已安装并激活 GitHub Copilot 的 VSCode...." />
+<meta property="og:image" content="https://docs.readthedocs.io/en/latest/_static/img/logo-opengraph.png" />
+<meta property="og:image:alt" content="KernelGen Documentation" />
+<meta name="description" content="本节介绍如何使用 VSCode（及 Copilot）、Claude Code 和 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集，并使用 KernelGen Skills 进行算子的通用生成。 有关为 FlagGems 或 vLLM 项目生成 Kernel、优化 Kernel以及跨硬件平台特化 Kernel 的使用案例，请参见 KernelGen Skills 使用案例 。 前提条件: 智能体客户端版本：- Claude Code 2.1 及更高版本, OpenClaw 2026.3.2 及更高版本, 已安装并激活 GitHub Copilot 的 VSCode...." />
+<meta name="twitter:card" content="summary_large_image" />
+
+    <title>KernelGen Skills 用户指南 &#8212; KernelGen 文档中心</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=4418a689" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=509a98c5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script src="../_static/translations.js?v=beaddf03"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script defer="defer" src="https://unpkg.com/@popperjs/core@2"></script>
+    <script defer="defer" src="https://unpkg.com/tippy.js@6"></script>
+    <script defer="defer" src="../_static/tippy/skills_user_guide/skills-user-guide.877ec22d-6c99-4bd9-9a7d-58ded2f952e8.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'skills_user_guide/skills-user-guide';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="canonical" href="https://docs.flagos.io/projects/kernelgen/zh-cn/latest/skills_user_guide/skills-user-guide.html" />
+    <link rel="icon" href="../_static/favicon.svg"/>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="Web 平台使用案例" href="../web_use_case/web-use-case-pr.html" />
+    <link rel="prev" title="TLE Kernel" href="../mcp_user_guide/mcp_tool/tle.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  <script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="kernelgen-zh" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/skills_user_guide/skills-user-guide.html" /><meta name="readthedocs-http-status" content="200" /></head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="网页导航">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="当前页面">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/zh-logo.svg" class="logo__image only-light" alt="KernelGen 文档中心 - Home"/>
+    <img src="../_static/zh-logo-dark.svg" class="logo__image only-dark pst-js-only" alt="KernelGen 文档中心 - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    KernelGen 文档中心
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">📑 发版说明</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../release_notes/release-notes.html">发版说明</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📚 用户指南</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../KernelGen_overview/KernelGen-overview.html">KernelGen 概述</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../KernelGen_overview/kernelgen-features.html">功能特性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KernelGen_overview/supported-hardware-platforms.html">支持的硬件平台</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KernelGen_overview/where-to-begin.html">从哪里开始？</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KernelGen_overview/workflow.html">工作流程</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../KernelGen_overview/concept.html">概念</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../getting_started/getting-started.html">快速入门</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/requirements.html">浏览器要求</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/signup-KernelGen.html">注册与登录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/login.html">登录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/generate-triton-kernels-through-default-use-cases.html">通过预定义用例生成Kernel</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../web_user_guide/web-user-guide.html">KernelGen Web 平台用户指南</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../web_user_guide/generate-triton-kernels-through-your-operator-definitions.html">通过您的算子定义生成Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../web_user_guide/view-genertion-results-and-select-optimal-triton-kernel.html">查看生成结果并选择最优 Kernel</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../mcp_user_guide/mcp-user-guide.html">KernelGen 算子开发 MCP 工具集用户指南</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../mcp_user_guide/prerequisites.html">前置条件</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../mcp_user_guide/connect_mcp/connect-mcp.html">配置并连接到 KernelGen 算子开发 MCP 工具集</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/connect_mcp/obtain-token.html">获取 KernelGen Token</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/connect_mcp/vscode-connect-mcp.html">使用 VSCode 连接到 KernelGen 算子开发 MCP 工具集</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/connect_mcp/claudecode-connect-mcp.html">使用 Claude Code 连接到 KernelGen 算子开发 MCP 工具集</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/connect_mcp/openclaw-connect-mcp.html">使用 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/connect_mcp/cursor-connect-mcp.html">使用 Cursor 连接到 KernelGen 算子开发 MCP 工具集</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../mcp_user_guide/mcp_tool/mcp-tool.html">主要 MCP 工具</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/mcp_tool/autotune.html">自动调优 Kernel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcp_user_guide/mcp_tool/tle.html">TLE Kernel</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">KernelGen Skills 用户指南</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">⤵️ 使用案例</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../web_use_case/web-use-case-pr.html">Web 平台使用案例</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../skills_use_case/skills-use-case.html">KernelGen Skills 使用案例</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../skills_use_case/generate-ops-for-gems-and-vllm.html">为 FlagGems 或 vLLM 项目生成 Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../skills_use_case/optimize-ops.html">优化 Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../skills_use_case/specialize-ops.html">特化 Kernel</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📖 FAQs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../faqs/faqs.html">常见问题解答</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">📖 参考手册</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references/search-repo-list.html">仓库列表</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flagos-ai/KernelGen" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flagos-ai/KernelGen/edit/main/skills_user_guide/skills-user-guide.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="亮色"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="暗色"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>亮色</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>暗色</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>KernelGen Skills 用户指南</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#claude-code-kernelgen-mcp-skills">将 Claude Code 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#claude-code-kernelgen-mcp">使用 Claude Code 连接到 KernelGen 算子开发 MCP 工具集</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">前提条件</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">步骤</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skills">配置 Skills</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openclaw-kernelgen-mcp-skills">将 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vscode-github-copilot-kernelgen-mcp-skills">将 VSCode 和 Github Copilot 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">通用算子生成</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!--
+ Copyright 2026 FlagOS Contributors
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<section class="tex2jax_ignore mathjax_ignore" id="kernelgen-skills">
+<h1>KernelGen Skills 用户指南<a class="headerlink" href="#kernelgen-skills" title="Link to this heading">#</a></h1>
+<p>本节介绍如何使用 VSCode（及 Copilot）、Claude Code 和 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集，并使用 KernelGen Skills 进行算子的通用生成。</p>
+<p>有关为 FlagGems 或 vLLM 项目生成 Kernel、优化 Kernel以及跨硬件平台特化 Kernel 的使用案例，请参见 <a class="reference internal" href="../skills_use_case/skills-use-case.html"><span class="std std-doc">KernelGen Skills 使用案例</span></a>。</p>
+<section id="id1">
+<h2>前提条件<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>智能体客户端版本：</p>
+<ul>
+<li><p>Claude Code 2.1 及更高版本</p></li>
+<li><p>OpenClaw 2026.3.2 及更高版本</p></li>
+<li><p>已安装并激活 GitHub Copilot 的 VSCode</p></li>
+</ul>
+</li>
+<li><p>环境准备：</p>
+<ul>
+<li><p>请预先安装 <code class="docutils literal notranslate"><span class="pre">torch</span></code>、<code class="docutils literal notranslate"><span class="pre">triton</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 软件包，以支持在不同硬件平台上进行 Kernel 测试。对于华为昇腾（Huawei Ascend）平台，除标准 <code class="docutils literal notranslate"><span class="pre">torch</span></code> 软件包外，还需安装 <code class="docutils literal notranslate"><span class="pre">torch_npu</span></code>。</p></li>
+<li><p>预先安装 <a class="reference external" href="https://docs.flagos.io/projects/FlagTree/en/latest/getting_started/install.html">FlagTree</a>。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="claude-code-kernelgen-mcp-skills">
+<h2>将 Claude Code 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills<a class="headerlink" href="#claude-code-kernelgen-mcp-skills" title="Link to this heading">#</a></h2>
+<!--
+ Copyright 2026 FlagOS Contributors
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<section id="claude-code-kernelgen-mcp">
+<h3>使用 Claude Code 连接到 KernelGen 算子开发 MCP 工具集<a class="headerlink" href="#claude-code-kernelgen-mcp" title="Link to this heading">#</a></h3>
+<section id="id2">
+<h4>前提条件<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
+<ul class="simple">
+<li><p>使用 Claude Code 2.1 及更高版本。</p></li>
+<li><p>了解 Claude Code 设置：<a class="reference external" href="https://code.claude.com/docs/en/settings#">https://code.claude.com/docs/en/settings#</a>。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h4>步骤<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<p>按照以下步骤将 Claude Code 连接到 KernelGen 算子开发 MCP 工具集：</p>
+<ol class="arabic">
+<li><p>使用 Server-Sent Events（SSE）协议和 Bearer 认证方式，将 KernelGen 算子开发 MCP 工具集注册到 Claude Code：</p>
+<ul>
+<li><p><strong>方式一</strong>（推荐）：发送提示词连接到 KernelGen 算子开发 MCP 工具集，例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">根据Claude</span> <span class="pre">Code</span> <span class="pre">配置文档：https://code.claude.com/docs/en/mcp，连接</span> <span class="pre">MCP，MCP</span> <span class="pre">的</span> <span class="pre">URL</span> <span class="pre">为</span> <span class="pre">https://kernelgen.flagos.io/sse，token</span> <span class="pre">为</span> <span class="pre">&lt;你的</span> <span class="pre">KernelGen</span> <span class="pre">Token&gt;。配置在</span> <span class="pre">claude.json</span> <span class="pre">文件里。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">根据VSCode</span> <span class="pre">文档：https://code.visualstudio.com/docs/copilot/customization/mcp-servers，配置</span> <span class="pre">kernelgen</span> <span class="pre">MCP，MCP</span> <span class="pre">的</span> <span class="pre">URL</span> <span class="pre">为</span> <span class="pre">https://kernelgen.flagos.io/sse，token</span> <span class="pre">为</span> <span class="pre">&lt;你的</span> <span class="pre">KernelGen</span> <span class="pre">Token&gt;。配置在</span> <span class="pre">mcp.json</span> <span class="pre">文件里。</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>方式二</strong>：使用以下命令：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>sse<span class="w"> </span>kernelgen-mcp<span class="w"> </span>https://kernelgen.flagos.io/sse/<span class="w"> </span>--header<span class="w"> </span><span class="s2">"Authorization: Bearer &lt;your KernelGen Token&gt;"</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>方式三</strong>：手动修改配置文件。</p>
+<ul>
+<li><p><strong>方式 A</strong>：在 <code class="docutils literal notranslate"><span class="pre">.claude.json</span></code> 文件中添加 JSON 配置：</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"/root/projects/my-project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"kernelgen-mcp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sse"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://kernelgen.flagos.io/sse"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"Authorization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer &lt;你的 KernelGen Token&gt;"</span>
+<span class="w">          </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>方式 B</strong>：创建 <code class="docutils literal notranslate"><span class="pre">mcp.json</span></code> 文件并添加 JSON 配置：</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"kernelgen_mcp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://kernelgen.flagos.io/sse"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"Authorization"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer &lt;你的 KernelGen Token&gt;"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>验证 KernelGen 算子开发 MCP 工具集连接：</p>
+<ul class="simple">
+<li><p>方式一：使用提示词</p></li>
+</ul>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>请验证<span class="w"> </span>kernelgen<span class="w"> </span>mcp<span class="w"> </span>能否测通。
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>方式二：使用命令</p></li>
+</ul>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/mcp
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="skills">
+<h3>配置 Skills<a class="headerlink" href="#skills" title="Link to this heading">#</a></h3>
+<ol class="arabic">
+<li><p>配置 <code class="docutils literal notranslate"><span class="pre">kernelgen-flagos</span></code> 统一 Skills ，包含所有子技能：</p>
+<ul>
+<li><p><strong>方式一</strong>（推荐）：发送提示词配置 <code class="docutils literal notranslate"><span class="pre">kernelgen-flagos</span></code> 统一 Skill ，例如：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>请安装<span class="w"> </span>kernelgen-flagos<span class="w"> </span>skills,<span class="w"> </span>网址是<span class="w"> </span>https://github.com/flagos-ai/skills/tree/main/skills/kernelgen-flagos。
+</pre></div>
+</div>
+</li>
+<li><p><strong>方式二</strong>：使用命令配置</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>npx<span class="w"> </span>skills<span class="w"> </span>add<span class="w"> </span>flagos-ai/skills<span class="w"> </span>--skill<span class="w"> </span>kernelgen-flagos<span class="w"> </span>-a<span class="w"> </span>claude-code
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>npx 需要 npm 5.2.0 或更高版本。如果未安装 npm 或版本过旧，请运行 <code class="docutils literal notranslate"><span class="pre">npm</span> <span class="pre">-v</span></code> 检查当前版本并进行更新。</p>
+</div>
+<p><strong>方式三</strong>：手动配置</p>
+<p>在项目中创建名为 skills 的文件夹并添加Skills文件。</p>
+<p>您可以前往 https://github.com/flagos-ai/skills/tree/main/skills/kernelgen-flagos 克隆技能Skills。下载 Skills 文件并将其添加到 skills 文件夹中。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>.claude/skills
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/flagos-ai/skills/
+cp<span class="w"> </span>-r<span class="w"> </span>skills/skills/kernelgen-flagos/<span class="w"> </span>.claude/skills/
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>配置 Skills 后，使用 <strong>Control+C</strong> 重启 Claude Code。</p></li>
+<li><p>验证 Skills 是否已成功配置：</p>
+<ol class="loweralpha simple">
+<li><p>方式一：使用提示词：<code class="docutils literal notranslate"><span class="pre">请验证</span> <span class="pre">kernelgen-flagos</span> <span class="pre">skill</span> <span class="pre">能否测通。</span></code></p></li>
+<li><p>方式二：使用斜杠命令&quot;/&quot;，若列表中显示 kernelgen-flagos，则说明 Skills 已安装成功。</p></li>
+</ol>
+</li>
+</ol>
+</section>
+</section>
+<section id="openclaw-kernelgen-mcp-skills">
+<h2>将 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills<a class="headerlink" href="#openclaw-kernelgen-mcp-skills" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>发送提示词连接到 KernelGen 算子开发 MCP 工具集，例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">根据Claude</span> <span class="pre">Code</span> <span class="pre">配置文档：https://code.claude.com/docs/en/mcp，连接</span> <span class="pre">MCP，MCP</span> <span class="pre">的</span> <span class="pre">URL</span> <span class="pre">为</span> <span class="pre">https://kernelgen.flagos.io/sse，token</span> <span class="pre">为</span> <span class="pre">&lt;你的</span> <span class="pre">KernelGen</span> <span class="pre">Token&gt;。配置在</span> <span class="pre">claude.json</span> <span class="pre">文件里。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">根据VSCode</span> <span class="pre">文档：https://code.visualstudio.com/docs/copilot/customization/mcp-servers，配置</span> <span class="pre">kernelgen</span> <span class="pre">MCP，MCP</span> <span class="pre">的</span> <span class="pre">URL</span> <span class="pre">为</span> <span class="pre">https://kernelgen.flagos.io/sse，token</span> <span class="pre">为</span> <span class="pre">&lt;你的</span> <span class="pre">KernelGen</span> <span class="pre">Token&gt;。配置在</span> <span class="pre">mcp.json</span> <span class="pre">文件里。</span></code></p></li>
+</ul>
+</li>
+<li><p>发送提示词重启 OpenClaw，因为上一步已将 KernelGen 算子开发 MCP 工具集作为 MCP Server 添加到 <code class="docutils literal notranslate"><span class="pre">openclaw.json</span></code> 配置文件中。</p></li>
+<li><p>发送提示词配置 kernelgen-flagos 统一 skill，包含所有子技能，例如：<code class="docutils literal notranslate"><span class="pre">请安装</span> <span class="pre">kernelgen-flagos</span> <span class="pre">skills,</span> <span class="pre">网址是</span> <span class="pre">https://github.com/flagos-ai/skills/tree/main/skills/kernelgen-flagos。</span></code></p></li>
+<li><p>向 OpenClaw 发送提示词：<code class="docutils literal notranslate"><span class="pre">将技能转换为</span> <span class="pre">OpenClaw</span> <span class="pre">兼容的技能后重新安装。</span></code></p></li>
+<li><p>验证 Skills 是否已成功安装：<code class="docutils literal notranslate"><span class="pre">请验证</span> <span class="pre">kernelgen-flagos</span> <span class="pre">skill</span> <span class="pre">能否测通。</span></code></p></li>
+</ol>
+</section>
+<section id="vscode-github-copilot-kernelgen-mcp-skills">
+<h2>将 VSCode 和 Github Copilot 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills<a class="headerlink" href="#vscode-github-copilot-kernelgen-mcp-skills" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>发送提示词连接到 KernelGen 算子开发 MCP 工具集，例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">根据Claude</span> <span class="pre">Code</span> <span class="pre">配置文档：https://code.claude.com/docs/en/mcp，连接</span> <span class="pre">MCP，MCP</span> <span class="pre">的</span> <span class="pre">URL</span> <span class="pre">为</span> <span class="pre">https://kernelgen.flagos.io/sse，token</span> <span class="pre">为</span> <span class="pre">&lt;你的</span> <span class="pre">KernelGen</span> <span class="pre">Token&gt;。配置在</span> <span class="pre">claude.json</span> <span class="pre">文件里。</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">根据VSCode</span> <span class="pre">文档：https://code.visualstudio.com/docs/copilot/customization/mcp-servers，配置</span> <span class="pre">kernelgen</span> <span class="pre">MCP，MCP</span> <span class="pre">的</span> <span class="pre">URL</span> <span class="pre">为</span> <span class="pre">https://kernelgen.flagos.io/sse，token</span> <span class="pre">为</span> <span class="pre">&lt;你的</span> <span class="pre">KernelGen</span> <span class="pre">Token&gt;。配置在</span> <span class="pre">mcp.json</span> <span class="pre">文件里。</span></code></p></li>
+</ul>
+</li>
+<li><p>启动 KernelGen 算子开发 MCP 工具集：</p>
+<ol class="loweralpha simple">
+<li><p>按 <strong>Ctrl+Shift+P</strong> 打开命令面板，输入并搜索&quot;MCP: List Servers&quot;，然后按 Enter 键，查看 VSCode 中当前所有已配置的 MCP Server 及其运行状态。</p></li>
+<li><p>选择&quot;kernelgen-mcp&quot;，然后选择&quot;Start Server&quot;。</p></li>
+</ol>
+</li>
+<li><p>验证 KernelGen 算子开发 MCP 工具集连接，发送提示词：<code class="docutils literal notranslate"><span class="pre">请验证</span> <span class="pre">kernelgen</span> <span class="pre">mcp</span> <span class="pre">能否测通。</span></code></p></li>
+<li><p>发送提示词配置 kernelgen-flagos 统一 Skill，包含所有子技能，例如：<code class="docutils literal notranslate"><span class="pre">请安装</span> <span class="pre">kernelgen-flagos</span> <span class="pre">skills,</span> <span class="pre">网址是</span> <span class="pre">https://github.com/flagos-ai/skills/tree/main/skills/kernelgen-flagos。</span></code></p></li>
+<li><p>验证 Skills 是否已成功安装：<code class="docutils literal notranslate"><span class="pre">请验证</span> <span class="pre">kernelgen-flagos</span> <span class="pre">skill</span> <span class="pre">能否测通。</span></code></p></li>
+</ol>
+</section>
+<section id="id4">
+<h2>通用算子生成<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<p>生成算子时，典型提示词应包含以下必填项和可选项：算子名称（必填）、任务描述（必填）、输入参数及数据类型、输出参数及数据类型、测试设备，以及算子优化的迭代轮数。</p>
+<p>您可以使用以下任一方式调用 <code class="docutils literal notranslate"><span class="pre">kernelgen-flagos</span></code>  Skills 并生成算子：</p>
+<ul>
+<li><p><strong>方式一</strong>：使用斜杠命令和提示词</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>/kernelgen-flagos<span class="w"> </span>生成<span class="w"> </span>ReLU<span class="w"> </span>算子，该算子属于<span class="w"> </span>pointwise<span class="w"> </span>类别，包含一个输入参数<span class="w"> </span>input：类型为<span class="w"> </span>torch.Tensor<span class="w"> </span>的输入张量，可具有任意形状和数据类型（通常为浮点类型），需对其应用<span class="w"> </span>ReLU<span class="w"> </span>激活函数；输出为一个<span class="w"> </span>torch.Tensor<span class="w"> </span>类型的张量，其形状与输入相同，计算逻辑为<span class="w"> </span>max<span class="o">(</span><span class="m">0</span>,<span class="w"> </span>input<span class="o">)</span>，即所有负值置零而正值保持不变，请使用<span class="w"> </span>MetaX<span class="w"> </span>进行生成。
+</pre></div>
+</div>
+</li>
+<li><p><strong>方式二</strong>：完全使用提示词</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>使用<span class="w"> </span>kernelgen-flagos<span class="w"> </span>生成<span class="w"> </span>ReLU<span class="w"> </span>算子，该算子属于<span class="w"> </span>pointwise<span class="w"> </span>类别，包含一个输入参数<span class="w"> </span>input：类型为<span class="w"> </span>torch.Tensor<span class="w"> </span>的输入张量，可具有任意形状和数据类型（通常为浮点类型），需对其应用<span class="w"> </span>ReLU<span class="w"> </span>激活函数；输出为一个<span class="w"> </span>torch.Tensor<span class="w"> </span>类型的张量，其形状与输入相同，计算逻辑为<span class="w"> </span>max<span class="o">(</span><span class="m">0</span>,<span class="w"> </span>input<span class="o">)</span>，即所有负值置零而正值保持不变，请使用<span class="w"> </span>MetaX<span class="w"> </span>进行生成。
+</pre></div>
+</div>
+</li>
+</ul>
+<p>有关支持生成算子的硬件平台，请参见<a class="reference internal" href="../KernelGen_overview/supported-hardware-platforms.html"><span class="std std-doc">支持的硬件平台</span></a>。</p>
+<p>有关为 FlagGems 或 vLLM 项目生成算子、优化算子以及跨硬件平台特化 Kernel 的使用案例，请参见 <a class="reference internal" href="../skills_use_case/skills-use-case.html"><span class="std std-doc">KernelGen Skills 使用案例</span></a>。</p>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../mcp_user_guide/mcp_tool/tle.html"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">TLE Kernel</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../web_use_case/web-use-case-pr.html"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">Web 平台使用案例</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">前提条件</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#claude-code-kernelgen-mcp-skills">将 Claude Code 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#claude-code-kernelgen-mcp">使用 Claude Code 连接到 KernelGen 算子开发 MCP 工具集</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">前提条件</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">步骤</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skills">配置 Skills</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openclaw-kernelgen-mcp-skills">将 OpenClaw 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vscode-github-copilot-kernelgen-mcp-skills">将 VSCode 和 Github Copilot 连接到 KernelGen 算子开发 MCP 工具集并加载 Skills</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">通用算子生成</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： FlagOS Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, FlagOS Community.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

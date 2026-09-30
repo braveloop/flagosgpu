@@ -1,0 +1,192 @@
+# docs-sphinx/_ext/operator_list.py
+"""
+Sphinx directive to generate operator list table from conf/operators.yaml
+
+Usage in MyST Markdown:
+    ```{operator-list}
+    :stage: stable
+    ```
+
+Options:
+    :stage: Filter by stage (stable, beta, alpha)
+    :kind: Filter by kind (Math, NeuralNetwork, etc.)
+"""
+from docutils import nodes
+from docutils.parsers.rst import directives
+from sphinx.util.docutils import SphinxDirective
+from sphinx.application import Sphinx
+import yaml
+import re
+from pathlib import Path
+from typing import List, Dict, Any
+
+
+class OperatorListDirective(SphinxDirective):
+    """Generate operator list table from YAML data."""
+
+    has_content = False
+    required_arguments = 0
+    optional_arguments = 0
+
+    option_spec = {
+        'stage': directives.unchanged,
+        'kind': directives.unchanged,
+    }
+
+    def run(self) -> List[nodes.Node]:
+        """Generate the table."""
+        yaml_path = Path(self.config.operator_yaml_path)
+
+        if not yaml_path.exists():
+            warning = nodes.warning(
+                '',
+                nodes.paragraph(
+                    '',
+                    f"Warning: operators.yaml not found at {yaml_path}"
+                )
+            )
+            return [warning]
+
+        # Load YAML data
+        try:
+            with open(yaml_path, 'r', encoding='utf-8') as f:
+                data = yaml.safe_load(f)
+        except Exception as e:
+            error = nodes.error(
+                '',
+                nodes.paragraph('', f"Error loading operators.yaml: {e}")
+            )
+            return [error]
+
+        ops = data.get('ops', [])
+
+        # Apply filters
+        stage_filter = self.options.get('stage')
+        kind_filter = self.options.get('kind')
+
+        if stage_filter:
+            ops = [op for op in ops if self._has_stage(op, stage_filter)]
+        if kind_filter:
+            ops = [op for op in ops if kind_filter in op.get('kind', [])]
+
+        if not ops:
+            return [nodes.paragraph('', 'No operators found matching the criteria.')]
+
+        # Create table
+        return self._create_table(ops)
+
+    def _create_table(self, ops: List[Dict[str, Any]]) -> List[nodes.Node]:
+        """Create the operator table."""
+        table = nodes.table(classes=['operator-list', 'docutils'])
+        tgroup = nodes.tgroup(cols=7)
+        table += tgroup
+
+        # Column specifications
+        for width in [3, 10, 8, 6, 6, 12, 25]:
+            tgroup += nodes.colspec(colwidth=width)
+
+        # Table header
+        thead = nodes.thead()
+        tgroup += thead
+        header_row = nodes.row()
+
+        headers = ['No.', 'Name', 'Kind', 'Stage', 'Since', 'Labels', 'Description']
+        for header in headers:
+            entry = nodes.entry('', nodes.paragraph('', header))
+            header_row += entry
+        thead += header_row
+
+        # Table body
+        tbody = nodes.tbody()
+        tgroup += tbody
+
+        for idx, op in enumerate(ops, 1):
+            row = nodes.row()
+
+            # No.
+            row += nodes.entry('', nodes.paragraph('', str(idx)))
+
+            # Name (with code styling)
+            name_entry = nodes.entry()
+            name_entry += nodes.literal('', op.get('id', ''))
+            row += name_entry
+
+            # Kind
+            kind_text = ', '.join(op.get('kind', []))
+            row += nodes.entry('', nodes.paragraph('', kind_text))
+
+            # Stage
+            stage = self._get_latest_stage(op)
+            row += nodes.entry('', nodes.paragraph('', stage.title() if stage != '-' else '-'))
+
+            # Since version
+            since = self._get_since_version(op)
+            row += nodes.entry('', nodes.paragraph('', since))
+
+            # Labels
+            labels = op.get('labels', [])
+            labels_text = ', '.join(labels) if labels else '-'
+            row += nodes.entry('', nodes.paragraph('', labels_text))
+
+            # Description - parse inline code (backticks)
+            desc = op.get('description', '').strip()
+            desc_entry = nodes.entry()
+            desc_para = nodes.paragraph('')
+
+            if desc:
+                # Parse backticks and convert to inline code
+                parts = re.split(r'`([^`]+)`', desc)
+                for i, part in enumerate(parts):
+                    if i % 2 == 0:  # Regular text
+                        if part:
+                            desc_para += nodes.Text(part)
+                    else:  # Code inside backticks
+                        desc_para += nodes.literal('', part)
+                desc_entry += desc_para
+            else:
+                desc_entry += nodes.paragraph('', '-')
+            row += desc_entry
+
+            tbody += row
+
+        return [table]
+
+    def _has_stage(self, op: Dict[str, Any], stage: str) -> bool:
+        """Check if operator has the specified stage."""
+        stages = op.get('stages', [])
+        for s in stages:
+            if stage.lower() in [k.lower() for k in s.keys()]:
+                return True
+        return False
+
+    def _get_latest_stage(self, op: Dict[str, Any]) -> str:
+        """Get the latest stage of an operator."""
+        stages = op.get('stages', [])
+        if not stages:
+            return '-'
+        last = stages[-1]
+        for key in last.keys():
+            return key
+        return '-'
+
+    def _get_since_version(self, op: Dict[str, Any]) -> str:
+        """Get the version when the operator was introduced."""
+        stages = op.get('stages', [])
+        if not stages:
+            return '-'
+        last = stages[-1]
+        for value in last.values():
+            return str(value)
+        return '-'
+
+
+def setup(app: Sphinx) -> Dict[str, Any]:
+    """Register the directive with Sphinx."""
+    app.add_config_value('operator_yaml_path', '../conf/operators.yaml', 'html')
+    app.add_directive('operator-list', OperatorListDirective)
+
+    return {
+        'version': '1.0',
+        'parallel_read_safe': True,
+        'parallel_write_safe': True,
+    }

@@ -1,0 +1,174 @@
+2026-09-30 23:52:42 - evalscope - [32mINFO[0m: Args: Task config is provided with CommandLine type.[0m
+2026-09-30 23:52:42 - evalscope - [33mWARNING[0m: Deprecated: The `timeout` parameter is deprecated and will be removed in v2.0.0. Use `generation_config.timeout` instead.[0m
+2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Running with native backend[0m
+2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Dump task config to /workspace/evalscope-datasets/level3/20260930_235310/configs/task_config.yaml[0m
+2026-09-30 23:53:10 - evalscope - [32mINFO[0m: {
+    "model_id": "minicpm",
+    "model_args": {},
+    "model_task": "text_generation",
+    "chat_template": null,
+    "datasets": [
+        "math_500"
+    ],
+    "dataset_args": {
+        "math_500": {
+            "dataset_id": "/workspace/evalscope-datasets/math_500",
+            "subset_list": [
+                "Level 3"
+            ]
+        }
+    },
+    "dataset_dir": "/root/.cache/modelscope/hub/datasets",
+    "dataset_hub": "modelscope",
+    "repeats": 1,
+    "eval_type": "openai_api",
+    "eval_backend": "Native",
+    "eval_config": null,
+    "limit": null,
+    "eval_batch_size": 8,
+    "use_cache": null,
+    "rerun_review": false,
+    "work_dir": "/workspace/evalscope-datasets/level3/20260930_235310",
+    "no_timestamp": false,
+    "enable_progress_tracker": false,
+    "ignore_errors": true,
+    "debug": false,
+    "seed": 42,
+    "api_url": "http://127.0.0.1:9031/v1/chat/completions",
+    "api_key": "**********",
+    "timeout": 3600.0,
+    "stream": null,
+    "judge": {
+        "strategy": "auto",
+        "models": [],
+        "contract": {
+            "system_prompt": null,
+            "prompt_template": null,
+            "score_mapping": null,
+            "score_type": "pattern"
+        },
+        "repeats": 1,
+        "position_swap": "auto",
+        "aggregation": "mean",
+        "min_valid_judges": 1
+    },
+    "analysis_report": false,
+    "collect_perf": true,
+    "use_sandbox": false,
+    "sandbox_type": "docker",
+    "sandbox_manager_config": {},
+    "evalscope_version": "1.11.1",
+    "model": "minicpm",
+    "generation_config": {
+        "timeout": 3600.0,
+        "batch_size": 8,
+        "max_tokens": 32768,
+        "top_p": 0.95,
+        "temperature": 1.0
+    },
+    "sandbox": {
+        "enabled": false,
+        "engine": "docker",
+        "default_config": {},
+        "manager_config": {},
+        "pool_size": null
+    },
+    "agent_config": null
+}[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]                                                           2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Start loading benchmark dataset: math_500[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]                                                           2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Loading dataset /workspace/evalscope-datasets/math_500 from local > subset: default > split: test ...[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Processing records:   0%|          | 0/500 [00:00<?, ?it/s][AProcessing records: 100%|██████████| 500/500 [00:00<00:00, 195065.76it/s]
+                                                           2026-09-30 23:53:10 - evalscope - [32mINFO[0m: math_500: 105 samples to evaluate (1 subset)[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]                                                           2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Subsets of math_500: ['Level 3'][0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Loading model for prediction...[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Creating model minicpm with eval_type=openai_api base_url=http://127.0.0.1:9031/v1/chat/completions, config={'timeout': 3600.0, 'retries': 5, 'retry_interval': 10, 'batch_size': 8, 'max_tokens': 32768, 'top_p': 0.95, 'temperature': 1.0, 'anthropic_cache_strategy': 'evaluation'}, model_args={}[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:10 - evalscope - [32mINFO[0m: Model loaded successfully.[0m
+Running[eval]:   0%|          | 0/1 [00:00<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:00<?, ?it/s][A2026-09-30 23:53:11,131 - openai._base_client - INFO: Retrying request to /chat/completions in 0.420072 seconds
+2026-09-30 23:53:11,131 - openai._base_client - INFO: Retrying request to /chat/completions in 0.496874 seconds
+2026-09-30 23:53:11,131 - openai._base_client - INFO: Retrying request to /chat/completions in 0.465621 seconds
+2026-09-30 23:53:11,132 - openai._base_client - INFO: Retrying request to /chat/completions in 0.472099 seconds
+2026-09-30 23:53:11,132 - openai._base_client - INFO: Retrying request to /chat/completions in 0.407941 seconds
+2026-09-30 23:53:11,132 - openai._base_client - INFO: Retrying request to /chat/completions in 0.415413 seconds
+2026-09-30 23:53:11,132 - openai._base_client - INFO: Retrying request to /chat/completions in 0.388478 seconds
+2026-09-30 23:53:11,132 - openai._base_client - INFO: Retrying request to /chat/completions in 0.489133 seconds
+2026-09-30 23:53:11,521 - openai._base_client - INFO: Retrying request to /chat/completions in 0.894520 seconds
+2026-09-30 23:53:11,541 - openai._base_client - INFO: Retrying request to /chat/completions in 0.992551 seconds
+2026-09-30 23:53:11,548 - openai._base_client - INFO: Retrying request to /chat/completions in 0.945341 seconds
+2026-09-30 23:53:11,552 - openai._base_client - INFO: Retrying request to /chat/completions in 0.873661 seconds
+2026-09-30 23:53:11,598 - openai._base_client - INFO: Retrying request to /chat/completions in 0.993366 seconds
+2026-09-30 23:53:11,605 - openai._base_client - INFO: Retrying request to /chat/completions in 0.950291 seconds
+2026-09-30 23:53:11,622 - openai._base_client - INFO: Retrying request to /chat/completions in 0.837529 seconds
+2026-09-30 23:53:11,629 - openai._base_client - INFO: Retrying request to /chat/completions in 0.863765 seconds
+                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:01<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:12 - evalscope - [33mWARNING[0m: Attempt 1 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:02<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:01<?, ?it/s][A2026-09-30 23:53:22,419 - openai._base_client - INFO: Retrying request to /chat/completions in 0.472445 seconds
+2026-09-30 23:53:22,428 - openai._base_client - INFO: Retrying request to /chat/completions in 0.426342 seconds
+2026-09-30 23:53:22,462 - openai._base_client - INFO: Retrying request to /chat/completions in 0.398821 seconds
+2026-09-30 23:53:22,497 - openai._base_client - INFO: Retrying request to /chat/completions in 0.499188 seconds
+2026-09-30 23:53:22,498 - openai._base_client - INFO: Retrying request to /chat/completions in 0.399273 seconds
+2026-09-30 23:53:22,536 - openai._base_client - INFO: Retrying request to /chat/completions in 0.412733 seconds
+2026-09-30 23:53:22,558 - openai._base_client - INFO: Retrying request to /chat/completions in 0.457469 seconds
+2026-09-30 23:53:22,594 - openai._base_client - INFO: Retrying request to /chat/completions in 0.480565 seconds
+2026-09-30 23:53:22,855 - openai._base_client - INFO: Retrying request to /chat/completions in 0.760697 seconds
+2026-09-30 23:53:22,862 - openai._base_client - INFO: Retrying request to /chat/completions in 0.915851 seconds
+2026-09-30 23:53:22,892 - openai._base_client - INFO: Retrying request to /chat/completions in 0.976814 seconds
+2026-09-30 23:53:22,897 - openai._base_client - INFO: Retrying request to /chat/completions in 0.975821 seconds
+2026-09-30 23:53:22,949 - openai._base_client - INFO: Retrying request to /chat/completions in 0.788126 seconds
+2026-09-30 23:53:22,997 - openai._base_client - INFO: Retrying request to /chat/completions in 0.849068 seconds
+2026-09-30 23:53:23,016 - openai._base_client - INFO: Retrying request to /chat/completions in 0.798218 seconds
+2026-09-30 23:53:23,075 - openai._base_client - INFO: Retrying request to /chat/completions in 0.817567 seconds
+                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:12<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:12<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A                                                           
+                                                             [A2026-09-30 23:53:23 - evalscope - [33mWARNING[0m: Attempt 2 / 5 failed: Connection error.. Retrying...[0m
+Running[eval]:   0%|          | 0/1 [00:13<?, ?benchmark/s]
+Evaluating[math_500]:   0%|          | 0/105 [00:13<?, ?it/s][A

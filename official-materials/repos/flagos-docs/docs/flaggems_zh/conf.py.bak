@@ -1,0 +1,110 @@
+# docs-sphinx_zh/source/conf.py
+# Configuration file for Sphinx documentation of FlagGems (Chinese version)
+
+import os
+import sys
+from pathlib import Path
+
+# Add custom extensions path
+sys.path.insert(0, str(Path(__file__).parent / "_ext"))
+
+# Project information
+project = "FlagGems"
+copyright = "2024, The FlagOS Contributors"
+author = "The FlagOS Contributors"
+release = ""
+
+# Sphinx extensions
+extensions = [
+    "myst_parser",
+    "sphinx_copybutton",
+    "sphinx_design",
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosectionlabel",
+    "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx",
+    "sphinxext.opengraph",
+    "sphinx_tippy",
+    # Custom extensions (shared via junction link)
+    "operator_list",
+    "benchmark_table",
+    "coverage_data",
+]
+
+# MyST Parser configuration
+myst_enable_extensions = [
+    "colon_fence",
+    "deflist",
+    "html_admonition",
+    "html_image",
+    "replacements",
+    "smartquotes",
+    "substitution",
+    "tasklist",
+]
+myst_heading_anchors = 3
+myst_footnote_transition = True
+myst_title_to_header = True
+
+# Theme configuration
+html_theme = "sphinx_book_theme"
+html_theme_options = {
+    "github_url": "https://github.com/flagos-ai/FlagGems",
+    "use_edit_page_button": True,
+    "show_nav_level": 2,
+    "navigation_with_keys": True,
+    "show_toc_level": 2,
+}
+
+html_context = {
+    "github_user": "flagos-ai",
+    "github_repo": "FlagGems",
+    "github_version": "master",
+    "doc_path": "docs/flaggems_zh",
+}
+
+# Internationalization (i18n) configuration - Chinese version
+language = "zh"
+locale_dirs = ["locales"]
+gettext_compact = True
+gettext_uuid = True
+
+# Custom config values for extensions
+# Paths to shared data sources
+operator_yaml_path = "../shared/conf/operators.yaml"
+benchmark_data_path = "../shared/benchmark"
+coverage_data_path = "../shared/coverage"
+
+# Static files - include shared coverage directory
+html_static_path = ["_static", "../shared/coverage"]
+html_css_files = [
+    "css/custom.css",
+    "https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css",
+]
+
+# Source file configuration
+source_suffix = {
+    ".md": "markdown",
+    ".rst": "restructuredtext",
+}
+source_encoding = "utf-8"
+master_doc = "index"
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "locales"]
+
+# Output configuration
+html_last_updated_fmt = "%Y-%m-%d"
+html_show_sourcelink = True
+html_show_sphinx = False
+html_copy_source = False
+
+# Code highlighting
+pygments_style = "github-dark"
+pygments_dark_style = "github-dark"
+
+# Linkcheck configuration (optional)
+linkcheck_ignore = [
+    "https://github.com/.*",  # Skip GitHub links
+]
+
+# Build configuration
+needs_sphinx = "7.0"

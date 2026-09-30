@@ -1,0 +1,123 @@
+INFO 09-30 23:47:20 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 09-30 23:47:20 [__init__.py:46] - fl -> vllm_fl:register
+INFO 09-30 23:47:20 [__init__.py:58] Loading plugin fl
+ERROR 09-30 23:47:21 [__init__.py:64] Failed to load plugin fl
+ERROR 09-30 23:47:21 [__init__.py:64] Traceback (most recent call last):
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/vllm/plugins/__init__.py", line 61, in load_plugins_by_group
+ERROR 09-30 23:47:21 [__init__.py:64]     func = plugin.load()
+ERROR 09-30 23:47:21 [__init__.py:64]            ^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/importlib/metadata/__init__.py", line 205, in load
+ERROR 09-30 23:47:21 [__init__.py:64]     module = import_module(match.group('module'))
+ERROR 09-30 23:47:21 [__init__.py:64]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/importlib/__init__.py", line 90, in import_module
+ERROR 09-30 23:47:21 [__init__.py:64]     return _bootstrap._gcd_import(name[level:], package, level)
+ERROR 09-30 23:47:21 [__init__.py:64]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/vllm_fl/__init__.py", line 21, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from vllm_fl.utils import get_op_config as _get_op_config
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/vllm_fl/utils.py", line 7, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     import flag_gems
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/flag_gems/__init__.py", line 21, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from flag_gems import testing  # noqa: F401
+ERROR 09-30 23:47:21 [__init__.py:64]     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/flag_gems/testing/__init__.py", line 17, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from flag_gems import runtime
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/flag_gems/runtime/__init__.py", line 19, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from .configs_loader import TunedConfigLoader
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/flag_gems/runtime/configs_loader.py", line 20, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     import triton
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/__init__.py", line 8, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from .runtime import (
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/runtime/__init__.py", line 1, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from .autotuner import (Autotuner, Config, Heuristics, autotune, heuristics)
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/runtime/autotuner.py", line 13, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from ..testing import do_bench, do_bench_cudagraph
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/testing.py", line 7, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from . import language as tl
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/language/__init__.py", line 4, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from . import math
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/language/math.py", line 1, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from . import core
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/language/core.py", line 10, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from ..runtime.jit import jit
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/runtime/jit.py", line 12, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from ..runtime.driver import driver
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/runtime/driver.py", line 1, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     from ..backends import backends
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/backends/__init__.py", line 50, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     backends = _discover_backends()
+ERROR 09-30 23:47:21 [__init__.py:64]                ^^^^^^^^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/backends/__init__.py", line 44, in _discover_backends
+ERROR 09-30 23:47:21 [__init__.py:64]     driver = _load_module(name, os.path.join(root, name, 'driver.py'))
+ERROR 09-30 23:47:21 [__init__.py:64]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/backends/__init__.py", line 12, in _load_module
+ERROR 09-30 23:47:21 [__init__.py:64]     spec.loader.exec_module(module)
+ERROR 09-30 23:47:21 [__init__.py:64]   File "/opt/conda/lib/python3.12/site-packages/triton/backends/metax/driver.py", line 30, in <module>
+ERROR 09-30 23:47:21 [__init__.py:64]     maca_include_dir = [os.path.join(maca_home_dirs(), "include")]
+ERROR 09-30 23:47:21 [__init__.py:64]                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 09-30 23:47:21 [__init__.py:64]   File "<frozen posixpath>", line 76, in join
+ERROR 09-30 23:47:21 [__init__.py:64] TypeError: expected str, bytes or os.PathLike object, not NoneType
+Traceback (most recent call last):
+  File "/opt/conda/bin/vllm", line 5, in <module>
+    from vllm.entrypoints.cli.main import main
+  File "/opt/conda/lib/python3.12/site-packages/vllm/__init__.py", line 14, in <module>
+    import vllm.env_override  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/vllm/env_override.py", line 858, in <module>
+    _patch_inductor_fallback_allow_list()
+  File "/opt/conda/lib/python3.12/site-packages/vllm/env_override.py", line 835, in _patch_inductor_fallback_allow_list
+    from torch._inductor import lowering as _lowering
+  File "/opt/conda/lib/python3.12/site-packages/torch/_inductor/__init__.py", line 12, in <module>
+    from .standalone_compile import CompiledArtifact  # noqa: TC001
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/torch/_inductor/standalone_compile.py", line 12, in <module>
+    from torch._dynamo.utils import dynamo_timed
+  File "/opt/conda/lib/python3.12/site-packages/torch/_dynamo/__init__.py", line 13, in <module>
+    from . import config, convert_frame, eval_frame, resume_execution
+  File "/opt/conda/lib/python3.12/site-packages/torch/_dynamo/convert_frame.py", line 53, in <module>
+    from torch._dynamo.symbolic_convert import TensorifyState
+  File "/opt/conda/lib/python3.12/site-packages/torch/_dynamo/symbolic_convert.py", line 52, in <module>
+    from torch._dynamo.exc import TensorifyScalarRestartAnalysis
+  File "/opt/conda/lib/python3.12/site-packages/torch/_dynamo/exc.py", line 41, in <module>
+    from .utils import counters
+  File "/opt/conda/lib/python3.12/site-packages/torch/_dynamo/utils.py", line 2341, in <module>
+    if has_triton_package():
+       ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/torch/utils/_triton.py", line 9, in has_triton_package
+    from triton.compiler.compiler import triton_key
+  File "/opt/conda/lib/python3.12/site-packages/triton/__init__.py", line 8, in <module>
+    from .runtime import (
+  File "/opt/conda/lib/python3.12/site-packages/triton/runtime/__init__.py", line 1, in <module>
+    from .autotuner import (Autotuner, Config, Heuristics, autotune, heuristics)
+  File "/opt/conda/lib/python3.12/site-packages/triton/runtime/autotuner.py", line 13, in <module>
+    from ..testing import do_bench, do_bench_cudagraph
+  File "/opt/conda/lib/python3.12/site-packages/triton/testing.py", line 7, in <module>
+    from . import language as tl
+  File "/opt/conda/lib/python3.12/site-packages/triton/language/__init__.py", line 4, in <module>
+    from . import math
+  File "/opt/conda/lib/python3.12/site-packages/triton/language/math.py", line 1, in <module>
+    from . import core
+  File "/opt/conda/lib/python3.12/site-packages/triton/language/core.py", line 10, in <module>
+    from ..runtime.jit import jit
+  File "/opt/conda/lib/python3.12/site-packages/triton/runtime/jit.py", line 12, in <module>
+    from ..runtime.driver import driver
+  File "/opt/conda/lib/python3.12/site-packages/triton/runtime/driver.py", line 1, in <module>
+    from ..backends import backends
+  File "/opt/conda/lib/python3.12/site-packages/triton/backends/__init__.py", line 50, in <module>
+    backends = _discover_backends()
+               ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/triton/backends/__init__.py", line 44, in _discover_backends
+    driver = _load_module(name, os.path.join(root, name, 'driver.py'))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/conda/lib/python3.12/site-packages/triton/backends/__init__.py", line 12, in _load_module
+    spec.loader.exec_module(module)
+  File "/opt/conda/lib/python3.12/site-packages/triton/backends/metax/driver.py", line 30, in <module>
+    maca_include_dir = [os.path.join(maca_home_dirs(), "include")]
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 76, in join
+TypeError: expected str, bytes or os.PathLike object, not NoneType

@@ -1,0 +1,32 @@
+# Local editor settings
+.vscode/
+
+# Private application material (kept locally, never published)
+docs/算力申请/
+
+# Credentials and local environment files
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# Models and generated caches
+models/
+cache/
+caches/
+.cache/
+__pycache__/
+*.py[cod]
+*.safetensors
+*.pt
+*.pth
+
+# Common local build and test output
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/

@@ -1,0 +1,4 @@
+interface:
+  display_name: "FlagOS MiniCPM Competition"
+  short_description: "Plan and execute compliant MiniCPM5-2B optimization"
+  default_prompt: "Use $flagos-minicpm-competition to plan and execute this competition task under the official FlagOS rules."

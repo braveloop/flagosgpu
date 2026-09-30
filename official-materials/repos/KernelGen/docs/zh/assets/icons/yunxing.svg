@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>yunxing</title>
+    <g id="1920" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="GroundTruch" transform="translate(-1866, -229)">
+            <g id="yunxing" transform="translate(1866, 229)">
+                <rect id="矩形备份-4" fill="#EEEEEE" x="0" y="0" width="20" height="20" rx="4"></rect>
+                <g id="yunhang备份-2" transform="translate(6, 5)" fill="#666666" fill-rule="nonzero">
+                    <path d="M1.53674258,0.151493286 C1.24234021,-0.0237850203 0.852751388,-0.0489493618 0.528439913,0.0863649483 C0.204128438,0.221679258 0,0.494584727 0,0.792677077 L0,9.20811526 C0.000313114784,9.50606501 0.204631848,9.77869803 0.528870835,9.91381487 C0.853109823,10.0489317 1.24248104,10.0237011 1.53674258,9.84850649 L8.60111335,5.6407874 C8.85171146,5.49166303 9,5.25329905 9,4.99960361 C9,4.74590817 8.85171146,4.50754419 8.60111335,4.35841982 L1.53674258,0.151493286 Z" id="路径"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
