@@ -1,8 +1,10 @@
 # MiniCPM5-2B 双平台推理吞吐优化路线
 
-本文把 FlagOS 2026 S2 MiniCPM5-2B 优化收敛为七个连续阶段：先冻结规则、环境和可信基线，再用分阶段 Profile 建立瓶颈模型，随后清理确定性开销，分别优化 BI-V150 实际命中的 Attention 路径与 C500 MACA 路径，最后处理共享算子、通用调度、图执行、可选量化和组合回归。每一步都要从真实端到端证据出发，并同时守住正确性、精度、TTFT、4K/16K 泛化和规则合规。本文是总路线，官方命令、完整调用链、算力规划与实验记录字段统一见 [S01 赛前准备与算力规划](docs/S01-赛前准备与算力规划.md)。
+本文把 FlagOS 2026 S2 MiniCPM5-2B 优化收敛为七个连续阶段：先冻结规则、环境和可信基线，再用分阶段 Profile 建立瓶颈模型，随后清理确定性开销，分别优化 BI-V150 实际命中的 Attention 路径与 C500 MACA 路径，最后处理共享算子、通用调度、图执行、可选量化和组合回归。每一步都要从真实端到端证据出发，并同时守住正确性、精度、TTFT、4K/16K 泛化和规则合规。本文是总路线；赛题规则、调用链和官方命令见 [S01 赛前静态准备](docs/S01-赛前静态准备.md)，实验记录要求见[项目 skill](skills/flagos-minicpm-competition/SKILL.md)。
 
-本机只用于源码阅读、版本比对、文档和静态检查；不安装比赛工程依赖、不编译、不导入项目模块、不加载模型，也不运行测试、Profile 或 benchmark。所有运行验证只在赛事提供的 BI-V150 与 C500 环境执行。
+本机只用于源码阅读、版本比对、文档和静态检查；不安装比赛工程依赖、不编译、不导入项目模块、不加载模型，也不运行测试、Profile 或 benchmark。租赁目标卡只承担诊断和预验证，正式精度、吞吐、TTFT 与阶段出口只在组委会认可的 BI-V150 与 C500 环境执行。
+
+S1 专家反馈只作为历史方法经验，不是 S2 规则或许可来源；S2 的合规边界只来自当前赛题页和组委会书面答复。OOT 包装、dispatch/model runner 集成、切换现有 vendor/native/Inductor 实现或单纯打开已有能力，都不单独构成创新；性能策略必须包含可审查的实质代码改动，并在报告中映射到实际激活的运行路径。
 
 ## 1. 目标、模型与不可越过的边界
 
@@ -71,23 +73,23 @@ KV Cache 每 token 的理论占用为：
 
 **本阶段目标**
 
-让两个官方环境的代码身份、真实 backend、模型行为、精度与性能波动均可追溯，建立后续所有 A/B 实验的可信起点。
+让两个官方环境的代码身份、真实 backend、模型行为、精度与性能波动均可追溯，建立后续所有同机器单变量配对实验的可信起点。
 
 **实施步骤**
 
-1. 使用 [S01 的八项规则问题](docs/S01-赛前准备与算力规划.md#6-开赛前还要确认什么)向组委会确认评分、TTFT、Accuracy、C0、调度/graph、自研量化与提交边界，并归档原文。
+1. 使用 [S01 的八项规则问题](docs/S01-赛前静态准备.md#4-待确认问题与提交要求)向组委会确认评分、TTFT、Accuracy、C0、调度/graph、自研量化与提交边界，并归档原文。
 
-2. 在 BI-V150 和 C500 分别记录硬件、显存、驱动、容器 ID、Python、Torch、Triton/FlagTree、vLLM、plugin 与 FlagGems 版本。
+2. 在 BI-V150 和 C500 分别记录硬件、显存、驱动、容器 ID、Python、Torch、Triton/FlagTree、vLLM、plugin 与 FlagGems 版本，并以实际运行证明“模型类 → 注册选择 → dispatch → 已编译实现 → 真实设备 kernel”的完整链路。
 
 3. 记录三个仓库的实际 import 路径、HEAD、dirty 状态和关键文件 hash；同时保存 `USE_C_EXTENSION`、FlagGems `has_c_extension/use_c_extension` 以及 server log 中的 Attention backend、KV block、token budget、chunked prefill 与 graph mode。未确认 Python/Triton 分支实际命中前，不按本地源码路径解释 Profile。
 
-4. 在 BI-V150 先用原始服务命令、环境白名单和日志确认实际 Attention backend。只有命中 `AttentionFLBackend` 时才检查 `forward_includes_kv_cache_update` 并调查 `C0`，不直接 cherry-pick 后续修复；未命中时将 C0 标为不适用。随后运行 3～5 个确定性短 prompt 和至少一个长 prompt，核对 token、EOS、重复和乱码。
+4. 在 BI-V150 先用原始服务命令和环境白名单确认完整运行链路与实际 Attention backend。只有命中 `AttentionFLBackend` 时才检查 `forward_includes_kv_cache_update` 并调查 `C0`，不直接 cherry-pick 后续修复；未命中时将 C0 标为不适用。随后运行 3～5 个确定性短 prompt 和至少一个长 prompt，核对 token、EOS、重复和乱码。
 
 5. 执行完整 MATH-500 Level 3，保存逐题输出、采样参数、seed 信息、失败请求和最终分数。
 
-6. 严格使用 [S01 的官方命令](docs/S01-赛前准备与算力规划.md#4-官方平台怎样取证)建立两个平台、两个场景的基线。每个 wrapper 内保持四轮、丢弃第一轮；整套 wrapper 独立重复 3～5 组以估计自然波动。
+6. 严格使用 [S01 的官方命令](docs/S01-赛前静态准备.md#3-官方复现命令)建立两个平台、两个场景的基线。每个 wrapper 内保持四轮、丢弃第一轮；整套 wrapper 独立重复 3～5 组以估计自然波动。
 
-7. 按 [S01 的实验记录模板](docs/S01-赛前准备与算力规划.md#5-实验记录模板)汇总 raw CSV、summary CSV、server log、硬件状态、逐题结果、源码 hash 与规则答复，生成不可变 `baseline-manifest`。
+7. 按[项目 skill 的验证与记录要求](skills/flagos-minicpm-competition/SKILL.md#implementation-and-verification-discipline)汇总 raw CSV、summary CSV、server log、硬件状态、逐题结果、源码 hash 与规则答复，生成不可变 `baseline-manifest`。
 
 **验收条件**
 
@@ -116,11 +118,11 @@ KV Cache 每 token 的理论占用为：
 
 **实施步骤**
 
-1. 为诊断启动独立服务并启用对应平台 profiler；正式评分服务继续使用原始命令，不添加 profiler 参数。
+1. 为诊断启动独立服务并启用对应平台 profiler；正式评分服务继续使用原始命令，不添加 profiler 参数。Profile 前再次锁定模型类、注册、dispatch、已编译实现和设备 kernel，采样期间不得切换 backend。
 
 2. 在每个平台、每个场景分别标记初始纯 Prefill、混合 Prefill/Decode、稳态 Decode 和请求收尾四类时间窗。
 
-3. 同步保存 CPU timeline、device timeline、内存水位、graph capture/replay 与 graph break，不只截取最快片段。
+3. 使用官方 shape 预热至稳态后，在同一平台、服务参数、代码版本、backend 和热状态下同步采集 CPU timeline、device timeline、内存水位、graph capture/replay 与 graph break，不只截取最快片段。
 
 4. 把时间归入 GEMM、Attention Prefill/Decode、RoPE、KV write/read、RMSNorm、SiLU、scheduler/metadata、allocation/copy 与同步空洞。
 
@@ -128,7 +130,7 @@ KV Cache 每 token 的理论占用为：
 
 6. C500 额外记录 MACA Prefill/Decode kernel、metadata 构建时间，以及满足非 cascade、DCP=1、`num_prefills>0` 时 `.tolist()` 的同步次数。
 
-7. 使用 Amdahl 公式 `1 / ((1-p)+p/s)` 估算收益上限；即使局部加速 2 倍仍不足约 1% 端到端收益的候选先暂缓。
+7. 使用官方 shape 的暖态时间占比 `p` 与 Amdahl 公式 `1 / ((1-p)+p/s)` 估算收益上限；局部加速仍不足以越过实测噪声的候选先暂缓。
 
 **验收条件**
 
@@ -158,7 +160,7 @@ KV Cache 每 token 的理论占用为：
 
 **实施步骤**
 
-1. 每个候选使用 A0/B/A1 做单变量验证，但不为每个候选建立 commit；A0 与 A1 漂移明显时不采信 B。未提交的 B 必须绑定仓库、完整 base SHA、完整归档 scoped diff 的 SHA-256、全部改动或新增文件的 SHA-256、实际远端 import 路径和不可变实验 ID。相关修改积累到一个完成必要验证并得出保留、继续验证或回滚决定的小阶段交付后再提交，用户明确要求时除外。
+1. 每个候选使用“未改原版 → 单一候选 → 恢复原版复测”做单变量验证，但不为每个候选建立 commit；两次原版复测漂移明显时不采信候选。未提交的候选必须绑定仓库、完整 base SHA、完整归档 scoped diff 的 SHA-256、全部改动或新增文件的 SHA-256、实际远端 import 路径和不可变实验 ID。相关修改积累到一个完成必要验证并得出保留、继续验证或回滚决定的小阶段交付后再提交，用户明确要求时除外。对外学习结果只展示 A0（官方公布基线）和 B1（当前改进）。
 
 2. 实施 `M1`：在 C500 metadata builder 中一次计算 `prefill_cu_seq_lens` 并供 42 层复用。优先复用已有 cumulative tensor，否则使用 device cumsum；只改目标分支。
 
@@ -245,6 +247,7 @@ KV Cache 每 token 的理论占用为：
 - C500 官方 16K 吞吐高于 4K，批处理与长上下文特征明显不同，不能把 BI 结论外推。
 - 共享 RoPE 当前可能在小 Decode batch 下 program 数不足，但这是待 Profile 的假设。
 - RMSNorm 和 SiLU 已经融合；只有热点占比支持约 1% 端到端空间时才值得重写。
+- 固定 vLLM `llama.py` 已用 `MergedColumnParallelLinear` 实现 gate/up 投影，并用 `QKVParallelLinear` 实现 QKV 投影；这两项是现有源码事实，不能写成新实现的创新。
 
 **本阶段目标**
 
@@ -267,13 +270,13 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 该 grid 的第一维分开 token，第二维把 Q/KV heads 切成小组，以增加小 batch 并行度。两个平台可以选择不同 `HEADS_PER_PROGRAM`，但必须共用通用 shape 条件并保留原 kernel fallback；Prefill 和非连续布局不默认进入该路径。
 
-5. 实施 `N1` 时沿 `RMSNormFL.forward_oot → FlagGems dispatch → modules/normalization.py:gems_rms_forward → fused/fused_add_rms_norm.py` 的真实 residual 路径比较 hidden 2048 下 4/8 warps、连续 fast path 与 reduction 效率，保持 FP32 累加、epsilon 和原地 residual 语义。
+5. 实施 `N1` 时先确认目标运行确实沿 `RMSNormFL.forward_oot → FlagGems dispatch → modules/normalization.py:gems_rms_forward → fused/fused_add_rms_norm.py` 的 residual 路径，而不是 native/Inductor 或其他实现；再比较 hidden 2048 下 4/8 warps、连续 fast path 与 reduction 效率，保持 FP32 累加、epsilon 和原地 residual 语义。
 
-6. 实施 `S1` 时按真实布局处理：父 tensor 末维为 12288，split 后两个 6144 元素 view 的行 stride 仍为 12288。继续用 FP32 sigmoid，不采用近似 exp，也不能把两个 view 误判为独立 contiguous tensor。
+6. 实施 `S1` 时先确认目标运行实际命中 FlagGems 路径，而不是 native/Inductor 实现；再按真实布局处理：父 tensor 末维为 12288，split 后两个 6144 元素 view 的行 stride 仍为 12288。继续用 FP32 sigmoid，不采用近似 exp，也不能把两个 view 误判为独立 contiguous tensor。
 
 7. 同步检查 Decode graph 覆盖和 Attention eager boundary，记录动态 shape、metadata 与 wrapper 导致的 graph break，但把正式图策略留给阶段 6。
 
-8. `M2/R2/N1/S1` 各自建立 A0/B/A1，先做算子差分，再做两场景端到端；共享小算子在另一平台同步回归。
+8. `M2/R2/N1/S1` 各自进行“未改原版 → 单一候选 → 恢复原版复测”，先做算子差分，再做两场景端到端；共享小算子在另一平台同步回归。不从 S1 历史反馈复制 `torch.compile` 或 greedy sampler 方案，因为 S2 的官方服务参数和采样行为必须保持不变。
 
 **验收条件**
 
@@ -281,7 +284,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 - `M2` 不新增每 step 分配，地址稳定且 metadata 无陈旧内容。
 - vendor Attention 改动属于实质开发，不是后端切换。
 - `R2/N1/S1` 分别具有算子误差、局部性能和端到端消融证据。
-- C500 4K/16K 收益超过噪声并尽量达到≥1%，TTFT 不恶化、Level 3≥0.95；共享路径通过 BI 回归。
+- [项目验收目标] 最终保留的组合在四个场景分别达到 BI-V150 4K `2048.29` tok/s、BI-V150 16K `924.30` tok/s、C500 4K `5140.54` tok/s 和 C500 16K `7099.97` tok/s；同时 Mean TTFT 不超过对应保守上限、Level 3≥0.95，所有请求成功且重复统计超过实测噪声。这是项目目标，不冒充组委会最终评分规则。
 
 **退出与回退**
 
@@ -343,9 +346,9 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 **实施步骤**
 
-1. 从固定比赛 commit/tag 建立干净最终分支，按 correctness、低风险清理、平台 Attention、共享算子、调度/graph 的顺序应用补丁。
+1. 从第一个候选启动时就维护消融顺序与“候选 → 实际源码/提交 → 最终报告章节”映射；最终再从固定比赛 commit/tag 建立干净分支，按 correctness、低风险清理、平台 Attention、共享算子、调度/graph 的顺序应用补丁。
 
-2. 每加入一项都运行短 prompt、对应 operator test 与快速 A/B；发现交互时回到最后一个已知正确组合。
+2. 每加入一项都运行短 prompt、对应 operator test 与快速同机器配对对照；发现交互时回到最后一个已知正确组合。
 
 3. 组合完成后在两平台冷启动，运行完整 Level 3 与官方 4K/16K，整套流程独立复现至少两轮。
 
@@ -353,9 +356,9 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 5. 从第二个干净 checkout 按复现说明重放全部补丁，核对 backend、commit、命令、精度和性能。
 
-6. 技术报告按“问题证据→代码文件/commit→正确性→性能→规则依据”逐项映射，规则敏感补丁附书面答复。
+6. 技术报告按“问题证据→代码文件/commit→正确性→性能→规则依据”逐项映射，规则敏感补丁附书面答复。未激活、没有实质代码、只有 microbenchmark 收益或无法映射最终 diff 的策略不得写成性能成果。
 
-7. 删除无收益代码、诊断开关、case 硬编码、未使用分支和报告未解释的逻辑，整理源码 diff、manifest、原始数据与复现说明。
+7. 删除无收益代码、诊断开关、case 硬编码、未使用分支和报告未解释的逻辑，整理源码 diff、manifest、原始数据与复现说明，并完成提交包中的 `report.pdf` 与 `readme.md`。
 
 **验收条件**
 
@@ -391,7 +394,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 | G2 | 两平台 | Decode graph 覆盖 | Graph break 与 launch 开销 | Replay 比例提高、fallback 正确 |
 | Q1 | 分平台 | 自研 W8A16（可选） | 权重带宽与显存 | 规则确认、Level 3≥0.95、净性能为正 |
 
-每个候选使用 A0/B/A1：A0 是干净基线，B 只包含一个候选，A1 回到基线复测。A0 与 A1 漂移明显时不采信 B；每次保存四轮 raw 数据、后三轮均值/标准差/CV、total/output throughput、Mean/median/P99 TTFT、TPOT、ITL、成功请求、峰值内存、日志、trace、commit/hash 和 Accuracy。
+每个候选内部使用“未改原版 → 单一候选 → 恢复原版复测”：两次原版复测漂移明显时不采信候选；每次保存四轮 raw 数据、后三轮均值/标准差/CV、total/output throughput、Mean/median/P99 TTFT、TPOT、ITL、成功请求、峰值内存、日志、trace、commit/hash 和 Accuracy。公开学习结果只分 A0（官方公布基线）与 B1（当前改进），官方未公布字段填“—”。
 
 | 维度 | 必测组合 | 判定 |
 |---|---|---|
@@ -403,7 +406,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 | SiLU×mul | token=1/64/2048，末维 12288 | FP32 sigmoid，误差和 layout 合规 |
 | 模型行为 | 短/4K+/16K+/混合 prompt | Token、EOS、请求数和生成长度无异常 |
 | 准确率 | 完整 MATH-500 Level 3 | ≥0.95，并保存逐题输出 |
-| 性能 | 两平台×4K/16K，官方四轮流程 | 提升超过噪声，尽量≥1%，TTFT 合规 |
+| 性能 | 两平台×4K/16K，官方四轮流程 | [项目验收目标] BI 4K≥2048.29、BI 16K≥924.30、C500 4K≥5140.54、C500 16K≥7099.97 tok/s；Mean TTFT 不超过对应保守上限，Level 3≥0.95，无失败请求且稳定超过实测噪声 |
 | 泛化 | 2K/8K/12K/混合长度 | 无 benchmark 特判或灾难性回退 |
 | 稳定性 | 冷启动、重复运行、graph/eager fallback | 无 OOM、失败请求、死锁或偶发错误 |
 
@@ -415,7 +418,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 ## 5. 规则问题、风险与参考边界
 
-[待平台验证] 下列问题必须取得组委会书面答复，详细原文问题见 [S01](docs/S01-赛前准备与算力规划.md#6-开赛前还要确认什么)：
+[待平台验证] 下列问题必须取得组委会书面答复，详细问题见 [S01](docs/S01-赛前静态准备.md#4-待确认问题与提交要求)：
 
 - 两张卡的性能分怎样组成 70%，是否各有权重或上限。
 - TTFT 的 1% 是逐平台逐场景、单轮、后三轮均值还是聚合判定。
@@ -434,15 +437,16 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 | 错误输出、少生成 token 或失败请求制造虚假高吞吐 | 性能前检查 token、EOS、长度、成功请求与完整 Accuracy |
 | 只取单次高点，或 4K 收益掩盖 16K 回退 | 官方四轮丢首；报告后三轮统计并并列呈现两场景 |
 | 按 4096/16384 写死或把 BI 方案硬套 C500 | 使用 phase/shape/KV 水位；验证 2K/8K/12K 与平台独立路径 |
-| 把单变量验证等同于逐候选 commit，或在同一个 B 中混入多个候选 | 每个 B 只验证一个候选并做 A0/B/A1；用完整 diff/hash 保持未提交实验可追溯，在阶段性决策后批量提交 |
+| 把单变量验证等同于逐候选 commit，或在同一次候选运行中混入多个改动 | 每轮只验证一个候选，并做“未改原版 → 单一候选 → 恢复原版复测”；用完整 diff/hash 保持未提交实验可追溯，在阶段性决策后批量提交 |
 | 未确认规则就进入调度、graph 或量化 | 保存组委会书面答复；未确认时采用保守回退 |
 
 | 官方资料/源码 | 采用内容 | 不越过的边界 |
 |---|---|---|
 | [比赛页面](https://flagos.io/race-detail-season2?id=539vlt2p&lang=cn) | 指定仓库、命令、指标、硬件和规则 | 不自行改变评分口径、命令或输入 |
+| [FlagOS dispatch 使用指南](https://docs.flagos.io/projects/vllm-plugin-FL/zh-cn/latest/dispatch_user_guide/dispatch-user-guide.html) | 注册、dispatch 和 OOT 集成机制 | 文档配置只说明候选链路；仍须在目标运行证明已编译实现与实际设备 kernel |
 | [MiniCPM5-2B config](https://modelscope.cn/models/OpenBMB/MiniCPM5-2B/resolve/master/config.json) | 模型 shape、dtype、GQA 与上下文 | 不修改模型结构或行为 |
 | [EvalScope MATH-500](https://evalscope.readthedocs.io/en/latest/benchmarks/math_500.html) | Level 3 样本数与评测语义 | 不用子集替代完整正式精度 |
-| [S01 赛前准备与算力规划](docs/S01-赛前准备与算力规划.md) | 官方命令、调用链、规则问题、算力边界与实验记录字段 | 不把静态分析或便宜卡结果写成官方平台结论 |
+| [S01 赛前静态准备](docs/S01-赛前静态准备.md) | 官方命令、调用链与规则问题 | 不把静态分析或非官方平台结果写成官方平台结论 |
 | `vllm-plugin-FL@13eb9be` | Dispatch、平台 Attention、metadata 与 graph 接口 | 不直接合并后续性能分支 |
 | `FlagGems@a7620cc` | Attention、RoPE、KV write、RMSNorm、SiLU | 不把后端切换冒充原创优化 |
 | `vLLM@ee0da84` | Scheduler、AttentionBackend 与模型调用参考 | 只读参考，不作为提交依赖 |
@@ -451,7 +455,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 1. 先冻结 BI-V150 实际 backend；命中 `AttentionFLBackend` 时完成 `C0`，未命中时以“不适用”证据闭环，再建立可信双平台基线并用 Profile 冻结真实热点。
 
-2. 优先验证 C500 `M1`；仅当 BI-V150 确实命中目标 FlagGems Attention 时验证 `I3/I1/I2`，其中 `I1` 是否有 materialization 以 trace 为准，否则按实际 backend 重新排序候选。
+2. C500 `M1` 已以提交 `47882ba` 在租赁卡完成预验证：16K 重复收益可见，4K 尚无涨点，正式平台出口仍待完成；当前代码和结论见 [S02](docs/S02-C500基线运行与内存问题复现.md)。仅当 BI-V150 确实命中目标 FlagGems Attention 时验证 `I3/I1/I2`，其中 `I1` 是否有 materialization 以 trace 为准，否则按实际 backend 重新排序候选。
 
 3. 仅当 BI-V150 确实命中目标 FlagGems Attention，且直接布局与固定开销证据成立时，才推进 `I4/I5`；`K1` 则以实际 KV write 路径证据为前提，不直接外推 C500 vendor 路径。
 
