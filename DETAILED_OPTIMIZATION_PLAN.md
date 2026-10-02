@@ -35,7 +35,7 @@ KV Cache 每 token 的理论占用为：
 
 [源码事实] BI-V150 的本地固定 dispatch 配置会优先调用 FlagGems Attention selector，但 selector 在未显式启用 `VLLM_FL_USE_FLAGGEMS_ATTN` 时返回 `TRITON_ATTN` 枚举路径；官方镜像的环境变量、注册覆盖和实际 backend 尚待日志确认。C500 的本地配置选择 MetaX/MACA vendor Attention。两张卡共享证据格式和通用调度设计，但必须先按实际 backend 分别归因；不能把一张卡的结论外推到另一张卡，也不能为启用候选而擅自切换后端。
 
-[官方规则] 不得修改正式 benchmark、test cases、serve 参数和模型行为，不得用超参数开启现成量化、投机解码或前缀缓存，不得只切换更快的现成后端，也不得直接合并新分支取得性能。不得按 `4096`、`16384` 或 case ID 写死逻辑；技术报告中的策略必须真实存在于最终代码。
+[官方规则] 不得调优正式 benchmark 脚本、test cases、serve 参数和模型行为，不得通过修改超参数开启量化、投机采样或已有前缀缓存功能，不得在没有实质算子优化时仅切换现成算子或删除框架主要算子选择逻辑，也不得直接合并 FlagOS 推理框架最新分支取得性能。不得按 `4096`、`16384` 或 case ID 写死逻辑；技术报告中的策略必须真实存在于最终代码。
 
 [分析假设] 本项目采用更保守的内部门槛：scheduler、graph、固定 metadata buffer 和自研量化在取得组委会书面确认后才进入成绩分支；局部收益必须超过实测噪声并转化为端到端收益。Profiler、缩短请求和 microbenchmark 只用于诊断，正式成绩只来自官方命令。
 
@@ -51,15 +51,15 @@ KV Cache 每 token 的理论占用为：
 
 | 阶段 | 状态 | 核心交付 | 阶段出口 |
 |---:|---|---|---|
-| 1 | 静态材料已核对，待官方平台验证 | 规则答复、环境指纹、正确性与官方基线 | 后端和源码可追溯；Level 3≥0.95；波动可识别约 1% 变化 |
-| 2 | 待执行 | 四类时间窗 Profile、热点与 Amdahl 模型 | 至少 85% 时间完成归因；冻结每个平台前三候选 |
-| 3 | 待执行 | C500 同步、FlagGems 临时分配与 wrapper 开销清理 | 同步/分配按设计消失；输出一致；无 TTFT 回退 |
+| 1 | 租赁 C500 已预验证；官方双平台待验收 | 规则答复、环境指纹、正确性与官方基线 | 后端和源码可追溯；Level 3≥0.95；波动可识别约 1% 变化 |
+| 2 | 已定位 C500 4K Decode 排序热点；完整双平台归因待做 | 四类时间窗 Profile、热点与 Amdahl 模型 | 至少 85% 时间完成归因；冻结每个平台前三候选 |
+| 3 | C500 M1 已预验证；阶段整体待验收 | C500 同步、FlagGems 临时分配与 wrapper 开销清理 | 同步/分配按设计消失；输出一致；无 TTFT 回退 |
 | 4 | 待执行 | BI-V150 GQA Decode、Prefill Attention 与 KV write | 16K 提升、4K 不退化、Attention/KV 正确性矩阵通过 |
-| 5 | 待执行 | C500 MACA 路径、共享 RoPE/Norm/SiLU 与 graph 分析 | C500 两场景稳定收益；共享路径跨平台回归通过 |
+| 5 | MetaX 排序 kernel 已获租赁 C500 配对、回归与 4K 重复支持，已推送 fork；跨平台待验 | C500 MACA 路径、共享 RoPE/Norm/SiLU 与 graph 分析 | C500 两场景稳定收益；共享路径跨平台回归通过 |
 | 6 | 待执行 | Shape-aware 调度、图覆盖与可选自研 W8A16 | 无 case 硬编码；TTFT 合规；量化若启用则完整精度通过 |
 | 7 | 待执行 | 双平台组合、消融、干净复现与技术报告 | 四个正式场景、精度、复现和规则合规全部通过 |
 
-七个阶段必须依次通过出口。量化只是阶段 6 的可选项；没有书面许可、成熟自研 kernel 和完整精度证据时，不进入最终提交。
+七个阶段仍必须依次通过出口；租赁平台上提前做单一热点候选的预验证，不代表跳过前序出口或正式双平台验收。量化只是阶段 6 的可选项；没有书面许可、成熟自研 kernel 和完整精度证据时，不进入最终提交。
 
 ## 3. 各阶段实施与出口
 
@@ -245,23 +245,26 @@ KV Cache 每 token 的理论占用为：
 
 - C500 本地固定配置走 MACA vendor Attention，不能照搬仅在 BI-V150 命中目标 FlagGems backend 时才成立的 kernel 结论；M1 后要重新判断 MACA、metadata 与共享小算子的占比。
 - C500 官方 16K 吞吐高于 4K，批处理与长上下文特征明显不同，不能把 BI 结论外推。
+- MetaX FP32 排序直方图已完成自研重写、双场景与精度预验证；改后 4K 稳态 Decode 的 8 次迭代中，新直方图累计 3.288 ms，而 `sweep` 累计 117.280 ms。此限定窗口只用于确定下一调查顺序，不是端到端时间占比；16K 的改后分相 Profile 尚未完成。
 - 共享 RoPE 当前可能在小 Decode batch 下 program 数不足，但这是待 Profile 的假设。
-- RMSNorm 和 SiLU 已经融合；只有热点占比支持约 1% 端到端空间时才值得重写。
+- 当前 C500 日志与 trace 中 Norm/SiLU 由 native 或编译融合路径执行，不能假定修改 FlagGems 的同名算子会命中；只有真实调用链与热点都确认后才值得重写。
 - 固定 vLLM `llama.py` 已用 `MergedColumnParallelLinear` 实现 gate/up 投影，并用 `QKVParallelLinear` 实现 QKV 投影；这两项是现有源码事实，不能写成新实现的创新。
 
 **本阶段目标**
 
-在不切换现成后端的前提下优化 C500 MACA 准备路径和真正热点，并为两个平台分别验证共享 RoPE、RMSNorm 与 SiLU 候选。
+在不切换现成后端的前提下优化 C500 的真实热点。先把已保留的 MetaX 排序改动在官方平台复核，再调查其后续 `sweep` 与 MACA 路径；共享 RoPE、RMSNorm 与 SiLU 只有实际命中且值得优化时才实施。
 
 **实施步骤**
 
-1. 在 `M1` 后重做 C500 的纯 Prefill、混合、稳态 Decode 与收尾 Profile，重新排序 MACA、metadata、RoPE、Norm 和 SiLU。
+1. 在 `M1` 与排序直方图改动后补齐 C500 的纯 Prefill、混合、稳态 Decode 与收尾 Profile，分别查看 `sweep`、MACA、metadata、RoPE、Norm 和 SiLU。当前仅完成租赁 C500 的 4K 稳态 Decode 限定窗口；下一次上卡须补 16K 和其余阶段，不能从单窗口外推。
 
-2. 若分配或地址变化仍显著，实施 `M2`：使用固定容量 metadata buffer 与有效 slice，保证 graph 地址稳定并清除陈旧数据。
+2. 若改后 Profile 再次确认排序 `sweep` 是主要可优化成本，先分析 `FlagGems/src/flag_gems/ops/sort.py:sweep` 中逐桶循环、局部扫描、lookback 等待和 scatter，构造仅针对 MetaX FP32/4-bit radix 的单变量候选。原排序路径必须保留回退；无严格稳定索引、特殊浮点位模式、top-p 与同随机状态 token 的差分结果，不进入完整模型测试。
 
-3. 若 MACA Attention 主导，只优化其 Prefill/Decode 分支准备、layout、KV write 和 launch 配置；不切换到另一现成 backend。
+3. 若分配或地址变化仍显著，实施 `M2`：使用固定容量 metadata buffer 与有效 slice，保证 graph 地址稳定并清除陈旧数据。
 
-4. 为 contiguous、full-rotary、BF16、小 Decode batch 实施 `R2` 二维 grid；当前 plugin 从 `vllm_fl/ops/rotary_embedding.py:RotaryEmbeddingFL.forward_oot` 传入 `inplace=True`，因此入口是 `FlagGems/src/flag_gems/fused/rotary_embedding.py:apply_rotary_pos_emb_inplace_kernel`。建议候选为：
+4. 若 MACA Attention 主导，只优化其 Prefill/Decode 分支准备、layout、KV write 和 launch 配置；不切换到另一现成 backend。
+
+5. 为 contiguous、full-rotary、BF16、小 Decode batch 实施 `R2` 二维 grid；当前 plugin 从 `vllm_fl/ops/rotary_embedding.py:RotaryEmbeddingFL.forward_oot` 传入 `inplace=True`，因此入口是 `FlagGems/src/flag_gems/fused/rotary_embedding.py:apply_rotary_pos_emb_inplace_kernel`。建议候选为：
 
 ```text
 (num_tokens, ceil((num_q_heads + num_kv_heads) / HEADS_PER_PROGRAM))
@@ -270,17 +273,18 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 该 grid 的第一维分开 token，第二维把 Q/KV heads 切成小组，以增加小 batch 并行度。两个平台可以选择不同 `HEADS_PER_PROGRAM`，但必须共用通用 shape 条件并保留原 kernel fallback；Prefill 和非连续布局不默认进入该路径。
 
-5. 实施 `N1` 时先确认目标运行确实沿 `RMSNormFL.forward_oot → FlagGems dispatch → modules/normalization.py:gems_rms_forward → fused/fused_add_rms_norm.py` 的 residual 路径，而不是 native/Inductor 或其他实现；再比较 hidden 2048 下 4/8 warps、连续 fast path 与 reduction 效率，保持 FP32 累加、epsilon 和原地 residual 语义。
+6. 实施 `N1` 时先确认目标运行确实沿 `RMSNormFL.forward_oot → FlagGems dispatch → modules/normalization.py:gems_rms_forward → fused/fused_add_rms_norm.py` 的 residual 路径，而不是 native/Inductor 或其他实现；再比较 hidden 2048 下 4/8 warps、连续 fast path 与 reduction 效率，保持 FP32 累加、epsilon 和原地 residual 语义。
 
-6. 实施 `S1` 时先确认目标运行实际命中 FlagGems 路径，而不是 native/Inductor 实现；再按真实布局处理：父 tensor 末维为 12288，split 后两个 6144 元素 view 的行 stride 仍为 12288。继续用 FP32 sigmoid，不采用近似 exp，也不能把两个 view 误判为独立 contiguous tensor。
+7. 实施 `S1` 时先确认目标运行实际命中 FlagGems 路径，而不是 native/Inductor 实现；再按真实布局处理：父 tensor 末维为 12288，split 后两个 6144 元素 view 的行 stride 仍为 12288。继续用 FP32 sigmoid，不采用近似 exp，也不能把两个 view 误判为独立 contiguous tensor。
 
-7. 同步检查 Decode graph 覆盖和 Attention eager boundary，记录动态 shape、metadata 与 wrapper 导致的 graph break，但把正式图策略留给阶段 6。
+8. 同步检查 Decode graph 覆盖和 Attention eager boundary，记录动态 shape、metadata 与 wrapper 导致的 graph break，但把正式图策略留给阶段 6。
 
-8. `M2/R2/N1/S1` 各自进行“未改原版 → 单一候选 → 恢复原版复测”，先做算子差分，再做两场景端到端；共享小算子在另一平台同步回归。不从 S1 历史反馈复制 `torch.compile` 或 greedy sampler 方案，因为 S2 的官方服务参数和采样行为必须保持不变。
+9. `sweep/M2/R2/N1/S1` 各自进行“未改原版 → 单一候选 → 恢复原版复测”，先做算子差分，再做两场景端到端；共享小算子在另一平台同步回归。不从 S1 历史反馈复制 `torch.compile` 或 greedy sampler 方案，因为 S2 的官方服务参数和采样行为必须保持不变。
 
 **验收条件**
 
 - C500 Prefill、混合、Decode 和收尾热点均有修改前后对比。
+- 已保留的 MetaX 排序直方图在两场景、完整精度和 C500 回归通过；下一候选 `sweep` 只有在自己的差分、完整 Level 3、双场景配对与 TTFT 通过后才能保留。
 - `M2` 不新增每 step 分配，地址稳定且 metadata 无陈旧内容。
 - vendor Attention 改动属于实质开发，不是后端切换。
 - `R2/N1/S1` 分别具有算子误差、局部性能和端到端消融证据。
@@ -289,6 +293,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 **退出与回退**
 
 - `M2` 破坏地址、slice 或 graph 时回到动态构造，先修正所有权模型。
+- `sweep` 任一稳定索引、特殊值、top-p/token 或长上下文性能失败时恢复现有 radix sweep，不影响已保留的直方图改动。
 - `R2/N1/S1` 只有 microbenchmark 收益或造成另一平台回退时关闭该平台 fast path或删除。
 
 ### 阶段 6：Shape-aware 调度、图执行与可选量化

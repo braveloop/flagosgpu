@@ -19,7 +19,7 @@ MODEL_WORK=/workspace/MiniCPM5-2B
 DATASET_WORK=/workspace/evalscope-datasets/math_500
 
 PLUGIN_COMMIT=13eb9be69ecc5b5ca4f79c44e9ee40081eaa1bf0
-FLAGGEMS_COMMIT=a7620cc191a0b42e040194622c5758b22a7a25dc
+FLAGGEMS_COMMIT=36e2f7fc641d2e0cd6f5823181a5b7ee11cebd96
 DEV_BRANCH=bravegpuwinner/s2-dev
 
 errors=0
@@ -221,6 +221,7 @@ run_prepare() {
 }
 
 run_serve() {
+  export PYTHONPATH="$FLAGGEMS_SRC/src:$PLUGIN_SRC${PYTHONPATH:+:$PYTHONPATH}"
   run_check || die 'serve prerequisites did not pass'
   if pgrep -af '[v]llm serve' >/dev/null 2>&1; then
     pgrep -af '[v]llm serve' >&2 || true
