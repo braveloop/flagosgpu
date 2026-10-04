@@ -52,10 +52,10 @@ KV Cache 每 token 的理论占用为：
 | 阶段 | 状态 | 核心交付 | 阶段出口 |
 |---:|---|---|---|
 | 1 | 租赁 C500 已预验证；官方双平台待验收 | 规则答复、环境指纹、正确性与官方基线 | 后端和源码可追溯；Level 3≥0.95；波动可识别约 1% 变化 |
-| 2 | 已定位 C500 4K Decode 排序热点；完整双平台归因待做 | 四类时间窗 Profile、热点与 Amdahl 模型 | 至少 85% 时间完成归因；冻结每个平台前三候选 |
+| 2 | C500 16K 稳态 Decode 已严格定位；纯 Prefill、tail 与双平台归因待补 | 四类时间窗 Profile、热点与 Amdahl 模型 | 至少 85% 时间完成归因；冻结每个平台前三候选 |
 | 3 | C500 M1 已预验证；阶段整体待验收 | C500 同步、FlagGems 临时分配与 wrapper 开销清理 | 同步/分配按设计消失；输出一致；无 TTFT 回退 |
 | 4 | 待执行 | BI-V150 GQA Decode、Prefill Attention 与 KV write | 16K 提升、4K 不退化、Attention/KV 正确性矩阵通过 |
-| 5 | MetaX 排序 kernel 已获租赁 C500 配对、回归与 4K 重复支持，已推送 fork；跨平台待验 | C500 MACA 路径、共享 RoPE/Norm/SiLU 与 graph 分析 | C500 两场景稳定收益；共享路径跨平台回归通过 |
+| 5 | 直方图已预验证并推送；E2 已记录为提交、待继续验收，16K 正收益、4K 仍不稳定 | C500 MACA 路径、共享 RoPE/Norm/SiLU 与 graph 分析 | C500 两场景稳定收益；共享路径跨平台回归通过 |
 | 6 | 待执行 | Shape-aware 调度、图覆盖与可选自研 W8A16 | 无 case 硬编码；TTFT 合规；量化若启用则完整精度通过 |
 | 7 | 待执行 | 双平台组合、消融、干净复现与技术报告 | 四个正式场景、精度、复现和规则合规全部通过 |
 
@@ -245,20 +245,20 @@ KV Cache 每 token 的理论占用为：
 
 - C500 本地固定配置走 MACA vendor Attention，不能照搬仅在 BI-V150 命中目标 FlagGems backend 时才成立的 kernel 结论；M1 后要重新判断 MACA、metadata 与共享小算子的占比。
 - C500 官方 16K 吞吐高于 4K，批处理与长上下文特征明显不同，不能把 BI 结论外推。
-- MetaX FP32 排序直方图已完成自研重写、双场景与精度预验证；改后 4K 稳态 Decode 的 8 次迭代中，新直方图累计 3.288 ms，而 `sweep` 累计 117.280 ms。此限定窗口只用于确定下一调查顺序，不是端到端时间占比；16K 的改后分相 Profile 尚未完成。
+- 直方图改后、sweep 空桶快路改写前，4K 稳态 Decode 的 8 次迭代中直方图累计 3.288 ms、sweep 累计 117.280 ms，这不是候选改后 Profile。2026-10-04 已用 prompt token 不变、generation token 增长与 8 个连续 Decode annotation 严格确认 16K 稳态 Decode；device self time 中 MACA flash-attention/sweep/GEMM 分别为 `61.21%/15.84%/12.34%`。纯 Prefill 与 tail 仍待补齐，`Running=64/Waiting=0` 单独不作相位证据。
 - 共享 RoPE 当前可能在小 Decode batch 下 program 数不足，但这是待 Profile 的假设。
 - 当前 C500 日志与 trace 中 Norm/SiLU 由 native 或编译融合路径执行，不能假定修改 FlagGems 的同名算子会命中；只有真实调用链与热点都确认后才值得重写。
 - 固定 vLLM `llama.py` 已用 `MergedColumnParallelLinear` 实现 gate/up 投影，并用 `QKVParallelLinear` 实现 QKV 投影；这两项是现有源码事实，不能写成新实现的创新。
 
 **本阶段目标**
 
-在不切换现成后端的前提下优化 C500 的真实热点。先把已保留的 MetaX 排序改动在官方平台复核，再调查其后续 `sweep` 与 MACA 路径；共享 RoPE、RMSNorm 与 SiLU 只有实际命中且值得优化时才实施。
+在不切换现成后端的前提下优化 C500 的真实热点。先把已保留的 MetaX 排序改动在官方平台复核，完成 `sweep` 候选独立验证，再调查剩余 MACA 与共享算子热点；共享 RoPE、RMSNorm 与 SiLU 只有实际命中且值得优化时才实施。
 
 **实施步骤**
 
-1. 在 `M1` 与排序直方图改动后补齐 C500 的纯 Prefill、混合、稳态 Decode 与收尾 Profile，分别查看 `sweep`、MACA、metadata、RoPE、Norm 和 SiLU。当前仅完成租赁 C500 的 4K 稳态 Decode 限定窗口；下一次上卡须补 16K 和其余阶段，不能从单窗口外推。
+1. 在 `M1` 与排序直方图改动后补齐 C500 的纯 Prefill、混合、稳态 Decode 与收尾 Profile，分别查看 `sweep`、MACA、metadata、RoPE、Norm 和 SiLU。4K 稳态 Decode 的旧窗口是空桶快路改写前证据；16K 稳态 Decode 已在 2026-10-04 严格补齐，mixed 窗口也已捕获。下一步是补齐 4K/16K 纯 Prefill 与 tail，并重做候选改后的分相对照，不从任何限定窗口外推。
 
-2. 若改后 Profile 再次确认排序 `sweep` 是主要可优化成本，先分析 `FlagGems/src/flag_gems/ops/sort.py:sweep` 中逐桶循环、局部扫描、lookback 等待和 scatter，构造仅针对 MetaX FP32/4-bit radix 的单变量候选。原排序路径必须保留回退；无严格稳定索引、特殊浮点位模式、top-p 与同随机状态 token 的差分结果，不进入完整模型测试。
+2. 已在 `FlagGems/src/flag_gems/ops/sort.py` 实现 E2，并记录为 `FlagGems@a7706f680ccc5b6e6fc6f3cb14a1987b98ce420b`：对 MetaX FP32、4-bit radix、长度至少 2048 复用已有 `global_hist[m, pass, bin]`，全局空桶的所有 CTA 一致跳过状态发布、lookback、局部前缀和与散写；全局非空桶完整保留已有局部空桶快路，局部空 CTA 仍参与状态协议。selector=false 时 constexpr 分支不读 `global_hist`，确保关闭 E2 的消融未被污染。E2 已通过 42 项 C500 定向回归和 5 组 top-p 同 RNG 差分；64×130560 的“关闭→开启→恢复关闭”中，全相等为 `5.800→3.146→5.776 ms`，稀疏为 `6.005→3.337→6.011 ms`，均匀 digit 为 `7.224→4.955→7.193 ms`，dense-random 为 `14.338→14.324→14.167 ms`。完整 105 题 Level 3 得分 `97.1%`。端到端开启→关闭→恢复开启三臂中，16K 有效均值为 `8568.34→8417.56→8546.21 tok/s`，两侧相对对照 `+1.79%/+1.53%`；4K 为 `7202.84→7174.90→7679.46 tok/s`，前两臂含有效慢轮，官方均值没有形成一致夹持。恢复 E2 的 4K/16K CV 为 `0.204%/0.228%`，但整体慢档风险未闭环；提交只记录当前候选，不代表 E2 已接受为最终 B1。
 
 3. 若分配或地址变化仍显著，实施 `M2`：使用固定容量 metadata buffer 与有效 slice，保证 graph 地址稳定并清除陈旧数据。
 
@@ -284,7 +284,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 **验收条件**
 
 - C500 Prefill、混合、Decode 和收尾热点均有修改前后对比。
-- 已保留的 MetaX 排序直方图在两场景、完整精度和 C500 回归通过；下一候选 `sweep` 只有在自己的差分、完整 Level 3、双场景配对与 TTFT 通过后才能保留。
+- E2 已记录为 `FlagGems@a7706f680ccc5b6e6fc6f3cb14a1987b98ce420b`，并已有定向差分、top-p 差分、三臂微基准、完整 Level 3，以及开启→关闭→恢复开启的三臂完整 wrapper。16K 两侧收益方向一致，4K 恢复臂稳定，但前两臂有效慢轮使官方均值没有形成一致夹持；这次提交不等于性能验收。租赁 C500 结果只能作预验证，候选改后分相 Profile、BI-V150 fallback 回归和官方双平台阶段出口仍须补齐。
 - `M2` 不新增每 step 分配，地址稳定且 metadata 无陈旧内容。
 - vendor Attention 改动属于实质开发，不是后端切换。
 - `R2/N1/S1` 分别具有算子误差、局部性能和端到端消融证据。
@@ -460,7 +460,7 @@ HEADS_PER_PROGRAM ∈ {1, 2, 4}
 
 1. 先冻结 BI-V150 实际 backend；命中 `AttentionFLBackend` 时完成 `C0`，未命中时以“不适用”证据闭环，再建立可信双平台基线并用 Profile 冻结真实热点。
 
-2. C500 `M1` 已以提交 `47882ba` 在租赁卡完成预验证：16K 重复收益可见，4K 尚无涨点，正式平台出口仍待完成；当前代码和结论见 [S02](docs/S02-C500基线运行与内存问题复现.md)。仅当 BI-V150 确实命中目标 FlagGems Attention 时验证 `I3/I1/I2`，其中 `I1` 是否有 materialization 以 trace 为准，否则按实际 backend 重新排序候选。
+2. 当前已接受的 B1 仍是插件 M1（`47882ba`）与排序直方图（`36e2f7fc6`）。E2 复用 `global_hist` 跳过全局空桶，现已单独记录为 `FlagGems@a7706f680ccc5b6e6fc6f3cb14a1987b98ce420b`；它已通过 42 项定向回归、5 组 top-p 差分、三臂微基准、完整 105 题 Level 3（`97.1%`），以及开启→关闭→恢复开启的三臂原始 wrapper。16K 有效均值为 `8568.34→8417.56→8546.21 tok/s`；4K 为 `7202.84→7174.90→7679.46 tok/s`，恢复臂稳定但前两臂有效慢轮使官方均值没有形成一致夹持。提交只固定候选身份，不等于接受为最终 B1；当前仍须继续完成 E2 改后分相 Profile、BI-V150 fallback 回归和两平台正式出口，详细结果见 [S02](docs/S02-C500基线运行与内存问题复现.md)。
 
 3. 仅当 BI-V150 确实命中目标 FlagGems Attention，且直接布局与固定开销证据成立时，才推进 `I4/I5`；`K1` 则以实际 KV write 路径证据为前提，不直接外推 C500 vendor 路径。
 
