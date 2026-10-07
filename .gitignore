@@ -23,6 +23,10 @@ __pycache__/
 *.pt
 *.pth
 
+# Local paper and extraction caches (indexes stay versioned)
+/CCFA/papers/
+/CCFA/text/
+
 # Common local build and test output
 .pytest_cache/
 .mypy_cache/
