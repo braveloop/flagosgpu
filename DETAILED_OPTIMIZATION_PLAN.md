@@ -2,30 +2,17 @@
 
 ## 1. 当前重点
 
-当前仅推进官方 OnlineLab 天数 BI-V150（32 GiB），MetaX 暂停。canonical 已纳入冻结的 Mixed/runtime/GEMM/SQL 组合，双场景正式四轮已通过，改后实际模型短Profile已完成。模型、原 serve 参数、原 wrapper、数值库、kernel/config 和后端选择保持不变；vLLM 只读，已授权本地提交；无推送、续租或实例关机授权。
-
-当前正式B1的原wrapper双场景各四轮完整通过，唯一A0/B1正式四行表、完整精度摘要与统计口径位于 [B1-V150 S03 第 6 节](docs/B1-V150/S03-天数混合注意力与矩阵访存及配置加载优化.md#6-精度与官方正式结果)。完整实现按唯一归属维护：[S01 Prefill](docs/B1-V150/S01-天数分页GQA注意力优化.md)、S02 Decode、[S03 Mixed/GEMM/SQL](docs/B1-V150/S03-天数混合注意力与矩阵访存及配置加载优化.md)，当前正式统计如下。
-
-本轮数值实现已通过Mixed全成本、Decode runtime编译体复用及实际GEMM四shape净收益/恢复对照门。七数值源码组合的完整Level3于14:58:07–15:23:02完成：105唯一预测/review、105非空HTTP200、失败0、103/105正确（98.095238%）。后加SQL只改变CPU反射，不改变数值七源及实际kernel/config；因此复用本组合103/105，SQL没有另跑fresh105。原CLI开发门已完成并完整归档，不作为正式统计。
-
-实际模型bounded嵌套CPU计时确认54次index内部反射合104.369 s；仍有配对的17次外层调用中反射占81.66%–90.31%，另11个cached长窗没有反射，不把全部CPU耗时归SQL。仅对iluvatar现有默认内部SQLite的同connection显式BEGIN内全库无FK/无未知对象资格和exact callable only反射作变更，保持默认FK解析、finally rollback/close和fresh原full fallback。只读资格/等价/净省时三门及生产自身实际import门通过，实际DB474表、474索引、10240000 bytes且字节不变；生产自身三表full→guardedonly→restore为1783.24→10.42→1746.35、1806.34→10.84→1905.73、1858.62→10.00→1994.65 ms。不改get_sql_model/key/pool/lock/puts/session/tuner/cache。
-
-八源冻结组合于16:48:34–18:06:22完成原wrapper RUNS=4、SKIP_FIRST=1双场景8轮，退出码0。4K四轮raw total3716.04/3714.91/3743.46/3799.76，后三轮3752.71±43.17 tok/s、CV1.1505%、Mean TTFT4366.20 ms；每轮256/256成功、失败0、输入1048576/输出262144。16K四轮raw2952.21/2951.79/2952.79/2951.60，后三轮2952.06±0.64 tok/s、CV0.021656%、Mean TTFT170295.23 ms；每轮128/128成功、失败0、输入2097152/输出131072。逐场景相对同日accepted Q16 total提升3.2079%/3.9769%、Mean TTFT下降10.6193%/4.9435%，相对官方A0提升85.0440%/222.5766%。8轮请求/tokens、吞吐和TTFT门全部通过，服务ERROR/OOM及cgroup failcnt/oom_kill/under_oom均0，preemption累计16，采样显存峰28688 MiB。完整raw/summary/controller/monitor已同步，root已审核接受为当前天数B1，五生产文件已用apply_patch纳入canonical，S01/S02/S03与索引已更新，无commit/push，评分snapshot八源不变。改后同源actual-model Profile于18:10:16–18:29:55完成两个原cohort，均exit0，共七窗口；自有评分与Profile进程均已严格按身份停止，GPU任务结束。远端现有trace解析已完成，4K初始/heavyMixed GEMM56.46%/54.08%、Prefill32.57%/31.78%，heavy q1 partial/merge4.43%/0.19%；16K初始Prefill64.13%、GEMM30.70%。稳态及tail每窗8次FULL graphlaunch，图内保持opaque；当前后续工作按下述同步与验证预算推进。
-
-当前工作顺序：
-
-1. 本轮正式双场景门已完成并完整同步，由root只读审核；不重做环境摸底、源码哈希或4K测试，不重复正式轮。
-2. 正式按后三轮mean、sample SD和CV逐场景比较同日accepted Q16，两个场景均无稳定回退；全部raw、请求/tokens、TTFT、ERROR/OOM、显存及preemption完整保留。
-3. 改后同源非评分actual-model七短窗已完成，两个原cohort成功、ERROR/OOM0；自有进程均已按身份停止。FULL图内未展开部分保持opaque，阶段事实已原位写入S03。
-4. 已同步获准生产文件至canonical并更新S01/S02/S03及索引；全部生产性能更改代码连续收录一次、块不超过40行并解释，唯一正式四行表与精度、统计说明维护于最新编号S03末尾，旧页只保留结果链接。Profile事实已更新，代码唯一覆盖和正式表已通过root只读核查。
-5. 当前正式B1继续保留，五生产文件与正式八源保持同版。同源SDK定时设备诊断完成原4K 256请求、失败0、输入1048576/输出262144，client及collector均exit0；同期metrics支持稳定64请求Decode。首8个完整连续replay设备区间495.858802 ms，FULL Graph aggregate为427.860848 ms（86.2868%），图外topk/topp为48.391880 ms（9.7592%），linear为8.995046 ms（1.8140%）；图内算子仍为opaque aggregate。实际sampler入口取得稳态B64×130560 FP32过滤前快照，k=None、p=0.95；同一快照的位模式、RNG状态及完整调用成本记录已归档。本轮隔离数值与完整调用成本检查已结束，原始结果已同步；当前保留正式B1，未增加生产实现，自有GPU任务已结束。
-6. MetaX暂停至用户恢复，保留 [MetaX S01](docs/MetaX/S01-C500基线运行与内存问题复现.md)和 [MetaX S02](docs/MetaX/S02-C500排序索引优化.md) 的既有实现与结果。
-
-本轮截止北京时间2026-10-12 24:00，23:40最终同步；之后只同步与按身份精确停止自有进程，不自行续租、实例关机或提交。正式双平台出口、干净复现及适用路径/fallback回归留待后续阶段。
+- 2026-10-16 BI-V150本版KV128与既有Mixed/runtime/GEMM/SQL组合已完成完整105题，103/105正确，105唯一成功非空、HTTP200/stop各105、请求错误0。原wrapper于21:41:42–22:57:51完成双场景各四轮、整体exit0；去首后三轮4K3819.66±8.35、16K3020.37±2.41 tok/s，CV0.218634%/0.079785%，MeanTTFT4250.15/165812.15ms，全部请求tokens完整、评分服务日志未见OOM或错误。主审独立核原件后已批准保留并更新当前B1；不把同日单轮control比较称为稳定因果增量。
+- 本轮基底为 `FlagGems@900531d91192bc5095a9838c9f3b03fc4b5098a0`、`vllm-plugin-FL@c75ae7e02507a2e4cee3b3369ff142318dca2bd0`；生产只增加Prefill完整共同历史128→64→32和page16/32/64的8/4/2页映射，Q2、因果32尾、Decode、selector及fallback不变。局部独立FP32、边界和完整成本门已完成，细节见现有S01；所有修改未提交、不推送，原生vLLM保持只读。
+- 当前唯一正式A0/B1表、精度及统计统一维护于 [B1-V150 S03第5节](docs/B1-V150/S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。本版正式测试无Profile；主审批准的唯一非评分单4K初始8iteration窗于23:00:31–23:07:49完成并清理，256成功0失败、tokens完整，总用时约438秒且无重试/额外窗口；原件与源/元数据/device联合证据已审。该初始混合窗确认Q16及部分CTA共同历史≥128，未观察Q8；可验证kernel sum1431.281ms，GEMM57.85%、Prefill31.04%，不外推16K/纯Decode/全程。10/12旧Profile不移植为本版比例，FULL内部仍保持opaque边界；本版跨平台适用路径和最终双平台出口未完成。
+- MetaX既有租赁预验证7795.68/8551.02 tok/s和102/105保持原身份，见 [MetaX S03第3章](docs/MetaX/S03-C500采样前缀判定与连续写回优化.md#3-正确性与性能结果)。
+- device prefix证明+连续mask写已完成105（103/105、错误0），但原4+4的16K未确认稳定增益，见 [MetaX S03](docs/MetaX/S03-C500采样前缀判定与连续写回优化.md)。geometry-v2已过局部门与原key复核，组合仍未验收；新实例 `4ceeedda09c6` 部署前原装Torch实算失败，官方macainfo仅CPU2/GPU0；sGPU-M已开启但租户逻辑设备未识别，需核对sGPU资源注入，暂停部署、无新成绩。选卡变量未见不证明注入错误，物理parent访问拒绝可能是正常隔离。恢复后按既定原版同日1+1→冻结组合105→原4+4；accepted不变。
+- 历史候选和失败仅保留内部ledger与immutable evidence。后续按真实可消耗时、覆盖、完整成本和风险筛选有界实质优化，最终组合仍须完整105题、原wrapper4+4及适用跨平台门，评分不带采集工具。
+- 用户确认本轮BI-V150于北京时间2026-10-16 24:00（10月17日00:00）到期，23:40开始最终同步；已批单窗Profile已完成，现阶段仅文档/归档与最终同步，不擅自续租或关闭实例。MetaX四份预先存在dirty源码保留原状，不在MetaX执行本轮测试，全部原始结果与冻结源码持续同步。
 
 ## 2. 统一约束与验收
 
-本机只做源码、文档和 Git 静态工作，目标卡才运行导入、编译、测试、服务、Profile 与 benchmark。指定版本、规则问题和调用链统一引用 [S01](docs/S01-赛前静态准备.md)；实验与文档纪律遵循[项目 skill](skills/flagos-minicpm-competition/SKILL.md)。只修改 `vllm-plugin-FL` 和 `FlagGems`，`vllm` 保持只读参考。
+本机只做源码、文档和 Git 静态工作，目标卡才运行导入、编译、测试、服务、Profile 与 benchmark。指定版本、规则问题、调用链及实验文档纪律统一遵循[项目 skill](skills/flagos-minicpm-competition/SKILL.md)与本节统一约束。只修改 `vllm-plugin-FL` 和 `FlagGems`，`vllm` 保持只读参考。
 
 必须保持官方 benchmark、test cases、serve 参数、模型、采样、输出长度和评分输入不变。禁止通过超参数开启量化或投机采样，禁止调 benchmark，禁止只切换现成 operator 或删除主要选择逻辑取得性能，禁止直接合并最新推理框架分支；同时不得启用现成前缀缓存或按 `4096/16384`、case ID 写死分支。
 
@@ -60,7 +47,7 @@
 
 **问题与目标。** 容器实际 import、设备 backend 和仓库 checkout 可能不同；先让双平台代码身份、模型行为、精度和波动可追溯。
 
-1. 按 S01 确认规则与调用链，记录设备、驱动、镜像、Python、Torch、编译器、plugin、FlagGems、实际 import 路径和源码状态。
+1. 按项目 skill 与本计划统一约束确认规则与调用链，记录设备、驱动、镜像、Python、Torch、编译器、plugin、FlagGems、实际 import 路径和源码状态。
 
 2. 从模型类、注册、dispatch、编译实现到设备 kernel 核实实际链路。KV update 的 C0 只在 BI-V150 真正命中 `AttentionFLBackend` 时检查，否则记录不适用并分析真实 backend。
 
@@ -72,39 +59,41 @@
 
 ### 阶段 2：分阶段 Profile 与瓶颈归因
 
-**问题与目标。** 总吞吐无法区分 Prefill、Decode、CPU 空洞或内存压力；需用联合测量解释至少 85% 端到端时间并冻结真实热点顺序。
+**问题与目标。** 用目标版本mcTracer短窗区分Prefill、Decode、CPU空洞和设备工作，建立真实可消耗时与候选顺序；开发不以先解释85%全程为前置条件。
 
-1. 在两平台、两场景分别标记纯 Prefill、mixed、稳态 Decode 和 tail，请求阶段必须由 token 与 annotation 共同确认。
+1. 本轮C500先核实已有mcTracer实际help和GPU EngineCore子进程，复用匹配组件、不升级SDK；在原服务/图模式下用2–3秒、最多5秒窗口标记Prefill/mixed、稳态Decode和tail，以token及可用annotation确认阶段。
 
-2. 同步采集 CPU timeline、device kernel、内存水位、allocation/copy、同步、graph capture/replay 和 break，不只截取最快片段。
+2. 不叠Torch profiler或硬件计数器；分开记录runtime/API、device kernel、stream/correlation及graph节点。FULL未展开部分保留opaque，不将API aggregate伪拆成算子，也不从时长推出带宽/spill；采集与stop/export干扰不得混入评分。
 
-3. 将时间归入 GEMM、Attention、RoPE、KV read/write、Norm/激活、metadata/scheduler 与空洞，并核实每个热点对应的实际源码路径。
+3. 只按可归因的设备证据和实际源码路径归类GEMM、Attention、RoPE、KV、Norm/激活、sampling、metadata/scheduler与空洞；选择活跃可改且净收益有依据的热点，不受固定算子/阶段顺序限制。
 
-4. 只用匹配时间窗的占比计算 Amdahl 上限；收益不足以越过噪声的候选暂缓，每个平台冻结前三项实际热点。
+4. 只用匹配窗口的可消耗时与覆盖估计收益上限，纳入dispatch、workspace、编译/调优等完整成本和风险；正确性或成本门失败即转不同机制/热点，不盲重旧变体，采集能力不足不伪造热点结论。
 
-**验收。** 四个正式场景都有分相热点与收益上限，至少 85% 端到端时间可解释，候选顺序由 trace 而非源码外观决定。
+**验收。** 候选须有真实分相热点、活跃路径和完整净收益依据；四个正式场景的分相解释与85%覆盖保留为最终质量目标，不阻塞已具充分证据的开发。正式成绩不带采集工具，参数和请求/token合同不变。
 
 ### 阶段 3：低风险同步与分配清理
 
 **问题与目标。** `M1` 处理 C500 非 cascade、DCP=1 且有 Prefill 的路径；其余同步、分配和 wrapper 只有被 Profile 证明可见才处理。
 
-1. 在 metadata builder 一次构造并共享 `prefill_cu_seq_lens`，供 42 层使用，不在每层 `.tolist()` 后重建 tensor。
+1. `M1` 已在 metadata builder 一次构造并跨42层共享 `prefill_cu_seq_lens`，消除逐层 `.tolist()` 后重建 tensor；`seq_lens/block_table` 亦已按batch共享，不重复立项。
 
-2. 对 dummy tensor、descale、view/chunk、`.to()` 和固定 buffer 分别核实读取关系、allocation/copy 与地址需求，不直接删除接口必需对象。
+2. 对 dummy tensor、descale、view/chunk、`.to()` 和固定 buffer 分别核实读取关系、allocation/copy 与地址需求，不直接删除接口必需对象。仅当 `prefill_query_start_loc` 减法及 `prefill_cu` 的 cat/cumsum 分配或launch成本实测可见时，考虑自研一次填充与固定容量双int32元数据缓冲，大小为 `2×(Rmax+1)×4` 字节；明确owner、stream、graph固定地址及batch生存期，不添同步，净收益不越噪声即停止。
 
 3. 仅对已测得的开销做单变量修改，并为 mixed batch、非连续布局、量化 KV、未知 shape/device 保留边界 fallback。
 
 4. 用目标计数器、token 差分、Level 3 和两场景配对验证；源码更短但计数器与端到端不变的补丁删除。
 
+容量依据：本轮C500 KV池约120.57万token，已有日志峰值使用90.7%、抢占0；`64×(16384+1024)=1114112` 约占池容量92.4%，尚无容量限速依据。plugin `model_runner.py::_allocate_kv_cache_tensors/_reshape_kv_cache_tensors` 已预分配并通过views/shared_by复用，worker已核算graph池；不重造池、不改配置、不启用量化/prefix。仅后续出现因KV不足等待/抢占，或可消除临时峰值挤占KV预算时，才立项容量开发，不改核算数字制造容量；区分初始化、峰值与稳态搬运收益。
+
 **验收。** 目标同步或分配按设计消失，metadata 语义和 graph 地址正确，4K/16K 无稳定回退；当前租赁 C500 结果仍待官方双平台出口。
 
 ### 阶段 4：BI-V150 Attention 与 KV
 
-**问题与目标。** 当前 Q16 组合的分页 Prefill、直接序列索引 Decode 与数量参数编译策略已完成局部数学、原Decode动态图、本版完整105及天数双场景正式四轮。正式结果统一在天数S03第6节；同源actual-model分相Profile已完成初始、稳态和tail短窗，FULL内部未展开部分如实保留；当前八源组合正式4+4已通过并纳入canonical，改后Profile已完成，跨平台适用路径回归留待后续阶段。
+**问题与目标。** 当前KV128组合的Q8/Q16完整共同历史128→64→32、原Q2/因果尾、直接序列索引Decode及数量参数编译策略已完成局部数学、本版完整105和BI双场景正式四轮，并获准保留。正式结果统一在天数S03第5节；10/12旧组合的初始/稳态/tail Profile只保留原日期与范围，本版独立单4K初始混合短窗已完成并经原件审查，FULL内部未展开部分仍如实保留。跨平台适用路径与最终双平台出口留待后续阶段。
 
 1. **优先级 1：P1 自研 paged-GQA Prefill/mixed Attention。** FlagGems 的 iluvatar 实现已组合跨 query KV 复用、完整历史/因果边界拆分、页粒度寻址与冗余 mask 削减、Q2/Q8/Q16 选择四项工作；`max_query_len == 2` 优先 Q2，否则只有最大查询至少16且整个batch平均查询至少16才选Q16，其余Q8。保持 BF16、FP32 online softmax、原 scale/causal 语义与输出 buffer contract，保留 physical page 负值/越界保护、Q 读取与输出写入 mask。plugin 仅通过原 `TRITON_ATTN` 枚举的受限实现子类接入，保留原 selector、KV update、mixed FULL graph 与未知 shape/layout/feature 的 fallback，不修改 vLLM，不启用现成 FlagGems Attention 开关。
 
-2. **优先级2：当前 Mixed/runtime/GEMM/SQL 组合正式保留。** Q8/Q16 的完整共同历史使用64-key，余32/因果/Q2保持原分段；Decode按设备长度选择32或64，固定16段与三个FP32 workspace。Prefill数量参数为runtime且禁止按值特化，数学、布局与兼容guard保持不变。本版完整105及原wrapper双场景各四轮门已通过，已保留四份数值生产文件及一份CPU SQL文件，未提交。
+2. **优先级2：当前KV128/Mixed/runtime/GEMM/SQL组合正式保留。** Q8/Q16的完整共同历史按128→64→32连续处理；128-key在page16/32/64正确映射8/4/2页，其他合法布局沿用原页号广播或逐lane读取，因果32尾/Q2保持原分段；Decode按设备长度选择32或64，固定16段与三个FP32 workspace。Prefill数量参数为runtime且禁止按值特化，数学定义、布局与兼容guard保持不变，128-key分块改变浮点归约顺序并重新完成FP32与整模数值门。本版103/105及原wrapper双场景各四轮门已通过；完整组合包含本版Prefill与既有Decode/Mixed/GEMM/SQL，未提交；本版改后仅完成单4K初始混合短窗，不外推其他窗口。
 
 3. **当前Mixed与后续稳态Decode研究。** 实际高q1 Mixed及自身KV长度和Attention设备热点已经支持原16段Decode/q1与Q16 skip的三文件关联包，builder及全部launch/merge成本已纳入局部门，最终组合已通过天数正式双场景验收。后续同源非评分Profile保持FULL内部opaque边界，不切graph/后端求可见性。仅在真实稳态长度分布及partial/merge设备计时证明工作失衡后，才研究固定CTA队列思路；现阶段不实施该路线，不扩大当前冻结源码。
 
@@ -114,21 +103,37 @@
 
 6. 调度、graph 策略与自研量化留待规则许可、适用审批和真实热点支持后最后评估。BI 的 32 GiB 与 KV 压力不是修改正式 `gpu-memory-utilization`、`max-model-len`、KV cache dtype、并发或采样参数的理由；不通过服务配置、量化开关或更换现成 backend 求分。
 
-**验收。** 设备路径实际激活，Attention/KV 差分、必要的完整 105 题精度、BI 4K/16K 官方四轮及跨平台适用路径/fallback 门通过，吞吐提升超过噪声，TTFT、请求正确性与 shadow shape 不回退。当前八源组合的局部正确性、103/105数值精度和天数正式双场景四轮已完成；改后Profile已完成，双平台门仍待后续阶段。
+**验收。** 设备路径实际激活，Attention/KV 差分、必要的完整 105 题精度、BI 4K/16K 官方四轮及跨平台适用路径/fallback 门通过，吞吐提升超过噪声，TTFT、请求正确性与 shadow shape 不回退。当前KV128组合的局部正确性、103/105数值精度和BI正式双场景四轮已完成；本版改后单4K初始混合Profile已完成并清理，10/12旧窗口不充作新证据，双平台门仍待后续阶段。
 
 ### 阶段 5：C500 Attention、KV 与融合主线
 
-**问题与目标。** 当前 C500 主热点是 MACA Attention，但安装版 `flash_attn` 的签名、binding 和可提交源码边界未确认；本阶段必须交付至少一项非排序、实际激活的实质代码，不能用已完成的排序成果代替。
+**问题与目标。** 当前 C500 主热点是 MACA Attention；本轮受限形状/版本的native caller-output合同与full-forward局部门已验证，但1+1整模增益约0.37%/0.04%不足稳定收益，已封存，无新依据不重复立项。本阶段仍须交付非排序、实际激活的实质代码，不能用排序成果代替。
 
-1. 在目标容器核实 MACA 的 actual import、函数签名、编译 binding 与源码权限，并分别 Profile 主核、combine、copy、KV write 和 CPU 空洞。实际 Decode 接口未证明支持 `num_splits` 或 direct output 前，不把 metadata 字段当调优旋钮。
+1. 复用已归档接口和本轮已验证的受限output alias/ownership、动态及图执行合同，不泛化其他ABI；后续依据新的主核、combine、copy、KV write或CPU空洞成本证据筛选路线，不重复无整模收益的R6，不凭metadata字段或 `num_splits` 参数宣称收益。
 
 2. 首攻 paged-KV 读取、GQA 跨 Q head 的 K/V 复用和 split/combine 工作分配，保持 BF16 输入输出、FP32 softmax 状态、scale 与 causal 语义。
 
-3. 若 MACA 主核在不可编辑边界外，评估 FlagGems 自主受限 BF16 paged-GQA Decode kernel；只能从 plugin 原调用点做 scoped dispatch，并保留原 backend selection 和 fallback，不能仅切换现成实现。
+3. 已失败自研Decode的完整图成本慢约54%，本轮不重启。历史KV读取已包含于vendor Attention主核，不能当额外独立热点重复计算；后续仍保留原backend selection、主dispatch与fallback，不能仅切换现成实现。
 
-4. KV/RoPE 融合先过成本门，核实 slot mapping、cache layout、ownership、alias 与可消访存量；保持 Q 旋转、K 原地语义和 cache contract，避免重复写 cache。独立 KV write 占比很小，不能单独支撑融合。
+4. **有条件的output内存路径。** 在plugin MetaX Attention的 `forward` 与 `fa_utils.py` 边界实现调用者output复用及graph地址、alias/ownership合同，消除临时输出与copy；native OptionalTensor仅为本轮受限形状/版本已核验的入口，其他ABI合同须独立验证。真正的缓冲生命周期与写入编排可作实质框架开发，直接换现成out/append接口不冒充原创kernel，没有实质开发不立项。
+
+   - `64token×16head×128dim×BF16` 每层输出256KiB，相关copy读写最多512KiB/层；42层累计流量不能算作峰值显存释放。vendor append仅核验接口合同，不独立立项；自研KV write/RoPE+slot融合为小备选，不重复现有功能，保持负slot/跨页及当前token只写一次、旋转一次。
+   - 旧KV write与相关copy约1.2%仅属旧短kernel窗口，不是端到端比例；先计metadata、dispatch、workspace完整成本，无收益依据不实施。
+   - 后续每个候选最多一次≤20分钟差分与eager及实际图执行路径的完整成本验证，不改变C500官方serve graph模式，覆盖负slot、跨页、alias、长短mixed与图重放；净收益不超噪声即止，通过后才纳入组合105题和原4K/16K官方各四轮、后三轮均值验收。规划完成可开展有界实验。
 
 5. Norm/SiLU 当前已有 Inductor 融合，QKV 与 gate/up 也已合并；不得重复宣称这些融合，但新的 Profile 若证明已激活 kernel 仍有计算或访存瓶颈，可以做实质优化。graph 变更留待阶段 6 规则门。
+
+6. **Shape-aware 多内核与有界调优（合规开发路线，待性能验证）。** 在平台内部增加二级选择，保留原主 dispatch、主要选择逻辑与 fallback；原 kernel 仅作回退，不计为新增实质开发。
+
+   - 从实际热点选择2–3个等价但具有实质计算/访存改动的Triton变体，分别建立受益形状范围；原kernel仅fallback，不做配置海扫。
+   - 按 M/N/K、dtype、layout、device，以及适用时的 page/query/KV length 等语义条件选型；禁止硬编码 4096/16384 场景、请求编号或基准答案，形状表不能替代泛化 guard。
+   - 优先复用本仓现有 LibTuner 能力，按目标实际版本核对接口；官方 v5.3.5 材料仅作流程参考，不合并 master，不把新接口未经核验移植到当前环境。
+   - 正确性先于性能：每个变体先做原实现差分及边界、mask、尾块、layout、别名与 graph 安全验证，再按同输入、同配置和配对顺序比较；仅保留完整路径净收益超过噪声的语义区间。
+   - 成本包含查表、dispatch、workspace、编译/调优冷启动及其摊销、eager 与 graph；预先限定候选数、单次调优时间和总预算，超限立即回退，不靠基准前隐蔽预调优或忽略 TTFT 获益。
+   - 缓存命名空间/键包含设备、编译器及实现版本，并隔离 dtype/layout 和影响正确性的元数据；配置缓存不得改实际输入、编译键或 mask 语义，且必须能在干净环境按相同预算再生。
+   - 最终仍须通过完整 105 题、原参数 4K/16K、冷启动与稳定态、跨平台适用路径/fallback 及正式验收；局部胜出不写成整模或官方收益。
+   - 据用户于 2026-10-13 确认，组委会已书面允许自行实质优化多个等价 Triton kernel，并按 Tensor Shape 选择内核/配置，前提是模型行为、Benchmark、vLLM 启动参数及主要选择逻辑不变；本项目据此开展，许可不等于已实现或通过验收。
+   - “C500 超过 80%”暂无公开代码或报告，不作本项目收益保证。
 
 **验收。** 至少一项 Attention、KV 或融合的非排序代码在 4K/16K 都独立稳定生效；覆盖 mixed、2K/8K/12K、head mapping、paging 边界、layout、workspace 与 fallback，并通过统一 Level 3、配对 wrapper 和改后 Profile。租赁结果不代替官方双平台验收。
 

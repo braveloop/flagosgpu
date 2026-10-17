@@ -1,12 +1,12 @@
 # S02：天数纯 Decode 直接序列索引与分页归约优化
 
-当前 B1 由 [S01 的 Q2/Q8/Q16 分页 Prefill与共享在线 softmax](S01-天数分页GQA注意力优化.md)、本文的直接序列索引 Decode，以及 [S03 的 Mixed 分派、宽输出 GEMM 和默认缓存反射](S03-天数混合注意力与矩阵访存及配置加载优化.md) 组成。纯 Decode 为每条有效序列直接找到一个查询，把长历史分成 16 段后合并；Mixed 则只在严格 eager 资格下复用这条 q1 路径，未知特征和布局返回 native 实现。本轮正式两场景各四轮于北京时间 2026-10-12 16:48:34–18:06:22 完成，唯一 A0/B1 正式表维护于 [S03 第 6 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#6-精度与官方正式结果)。
+当前 B1 由 [S01 的 Q2/Q8/Q16 分页 Prefill与共享在线 softmax](S01-天数分页GQA注意力优化.md)、本文的直接序列索引 Decode，以及 [S03 的 Mixed 分派、宽输出 GEMM 和默认缓存反射](S03-天数混合注意力与矩阵访存及配置加载优化.md) 组成。纯 Decode 为每条有效序列直接找到一个查询，把长历史分成 16 段后合并；Mixed 则只在严格 eager 资格下复用这条 q1 路径，未知特征和布局返回 native 实现。最新完整精度、正式双场景四轮及唯一 A0/B1 表统一维护于 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。
 
 ## 1. 设计目标与运行身份
 
 纯 Decode 每个有效序列只有一个查询，直接使用 sequence program ID 并从 QStart 读取其 token 位置，避免通用查询 tile 映射。每序列保留 16 个 softmax 分段，复用原 metadata 的三个 FP32 工作区；设备端长度小于两个宽 tile 时使用 32-key，否则使用 64-key。该选择只根据实际序列长度，不依赖评分 case。
 
-实验运行在官方 OnlineLab BI-V150 32 GiB，IX-ML 4.4.0、driver/CoreX 4.5.0、Python 3.12.11、Torch 2.10.0+corex.4.5.0、FlagTree 0.6.2a3+iluvatar3.6 和 Triton 3.6 保持冻结。FlagGems/plugin 基底分别为 `1bbd3c585de61b9c7850dead56fb3b01ee81a546` 和 `47882ba2585dafdec92f06aff8ceb8af1de54630`，本地 canonical 生产组合包含四个数值文件与一份 CPU SQL 文件。vLLM 执行镜像 site-packages 的 0.24.0 vendor，安装包 commit 未确认，只读参考 checkout 为 `ee0da84ab9e04ac7610e28580af62c365e898389`。同一评分服务完成 35 个 FULL graphs；模型为 `/workspace/MiniCPM5-2B`，端口 9031，FULL_DECODE_ONLY，显存比例 0.85，最大长度 131072，评分未启用 profiler。原 wrapper 的 RUNS=4、SKIP_FIRST=1、随机数据、ignore-eos、1024 输出 token、采样默认及 seed 参数均未改，client 的 plugin、GPU 与导入作用域保持原流程。数值源码、实际 kernel/config、模型及数值库冻结，精度与 CPU SQL 的复用边界见 [S03 第 6 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#6-精度与官方正式结果)。
+实验运行在官方 OnlineLab BI-V150 32 GiB，IX-ML 4.4.0、driver/CoreX 4.5.0、Python 3.12.11、Torch 2.10.0+corex.4.5.0、FlagTree 0.6.2a3+iluvatar3.6 和 Triton 3.6 保持冻结。当前 FlagGems/plugin 基底与未提交生产修改的运行身份统一见[S01第1节](S01-天数分页GQA注意力优化.md#1-模型运行环境与设计目标)，本文Decode源码未随KV128修改。vLLM 执行镜像 site-packages 的 0.24.0 vendor，安装包 commit 未确认，只读参考 checkout 为 `ee0da84ab9e04ac7610e28580af62c365e898389`。同一评分服务完成 35 个 FULL graphs；模型为 `/workspace/MiniCPM5-2B`，端口 9031，FULL_DECODE_ONLY，显存比例 0.85，最大长度 131072，评分未启用 profiler。原 wrapper 的 RUNS=4、SKIP_FIRST=1、随机数据、ignore-eos、1024 输出 token、采样默认及 seed 参数均未改，client 的 plugin、GPU 与导入作用域保持原流程。数值源码、实际 kernel/config、模型及数值库冻结，精度与 CPU SQL 的复用边界见 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。
 
 ## 2. Decode 完整生产实现与注册
 
@@ -219,4 +219,4 @@ backend 子类只替换 `get_impl_cls` 返回的实现类，注册目标仍是�
 
 ## 3. 精度与官方正式结果
 
-完整精度、统计口径与唯一 A0/B1 正式四行表统一见 [S03 第 6 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#6-精度与官方正式结果)。
+完整精度、统计口径与唯一 A0/B1 正式四行表统一见 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。

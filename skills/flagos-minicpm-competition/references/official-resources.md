@@ -26,6 +26,14 @@ For each material change, capture:
 
 Never convert a current upstream default into a competition assumption. Capture the official environment’s resolved values from logs, including Attention backend, device identity, driver/runtime/compiler versions, imported package paths and commits, KV block size, token budget, chunked-prefill state, graph mode, and memory limit.
 
+## MetaX mcTracer
+
+Use the target SDK's matching mcTracer and its actual binary version/help as the executable contract. [MACA 3.7 documentation, index 1116](https://developer.metax-tech.com/api/client/document/preview/1116/index.html) was web-inaccessible during the current review; [the MACA 3.5.3 mcTracer manual, index 995](https://developer.metax-tech.com/api/client/document/preview/995/split_files/mctracer.html) is historical reference only, not another version's CLI contract. On the 2026-10-14 C500, `/opt/maca/bin/mcTracer` exists, `mctracer-3.7.0` and `mctoolext_3.7.0` are both 3.7.0.38, and `/opt/maca` points to `maca-3.7.0`; login PATH lacks its bin directory. Actual help confirms mcTracer `3.7.0.38-ef9e10e`, `--attach PID`, Ctrl+T control, `--odname`, `--name` and `--mctx`, with no duration/range flags. Reuse this installation. The first 2026-10-14 trace exposes FULL graph child kernels over 3.160 seconds of actual GPU events; this is bounded visibility evidence, not a universally validated steady-state profile. Measure windows from event timestamps, not attach wall time; the second historical tail is not steady-state evidence.
+
+Identify the GPU-owning EngineCore child by PID, start time and command line, not the API parent alone. Confirm the supported launch/attach and child-following behavior and capture/replay timing before collection. Use 2–3-second diagnostic windows, at most 5 seconds, and keep runtime/API, device kernel, stream/correlation and graph-node evidence separate. A graph-launch aggregate is not an individual-kernel profile; missing nodes stay opaque, and elapsed time alone does not establish bandwidth or register spilling.
+
+Do not overlap mcTracer with Torch profiler or hardware-counter collection. Preserve the tool's command, version, target process and bounded window with raw outputs; separate stop/export disruption from workload time. Remove collection before acceptance, keep original service/graph/workload settings, and do not report instrumented throughput as scoring. Missing tools require official matching components, not an SDK/driver/numerical-library upgrade.
+
 ## Project-local evidence
 
 - [`STATIC_ANALYSIS_AND_PLAN.md`](../../../STATIC_ANALYSIS_AND_PLAN.md) contains the initial source audit and hypotheses. Treat unmeasured performance conclusions as hypotheses.
