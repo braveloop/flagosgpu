@@ -1,0 +1,35 @@
+{
+  "local_verification_only": true,
+  "project_imports": false,
+  "project_tests_run": false,
+  "runtime_verified": false,
+  "publication_status": "team_fork_report_review",
+  "FlagGems": {
+    "ast_files": 8,
+    "payload_hashes_verified": true,
+    "publication_scan_findings": []
+  },
+  "vllm-plugin-FL": {
+    "ast_files": 10,
+    "payload_hashes_verified": true,
+    "publication_scan_findings": []
+  },
+  "recipe_package_data_static": true,
+  "benchmark_hash_unchanged": true,
+  "no_metax_downpack_hook": true,
+  "document_relative_links_valid": true,
+  "git_diff_check_pass": true,
+  "git_diff_check_warning": {
+    "repository": "vllm-plugin-FL",
+    "path": "vllm_fl/quantization/w8a8/iluvatar_smooth_config.py",
+    "line": 213,
+    "kind": "new blank line at EOF",
+    "source": "unchanged frozen archive bytes",
+    "runtime_effect": "none; not executed",
+    "resolved": "Format-only EOF normalization in plugin 68dc756ed312240424ca7906f0b33210977186ea; original archive hash preserved in manifests"
+  },
+  "documentation_official_plugin_export_restored": true,
+  "documented_plugin_test_main_entrypoint_confirmed": true,
+  "official_submission_status": "blocked_pending_target_runtime",
+  "team_share_checks": "Reuse prior static source checks; sharing commits change only documentation/manifests and root submodule pointers. No new runtime tests."
+}

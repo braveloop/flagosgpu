@@ -2,6 +2,10 @@
 
 本仓库记录 FlagOS 第二季 MiniCPM5-2B 算子优化比赛的静态分析、分阶段实验计划、可复现学习文档与已完成证据。项目目标是在不改变官方工作负载和模型语义的前提下，对 BI-V150 与 C500 平台进行可验证、可回滚的性能优化。
 
+## 分支用途
+
+`main` 与两个子仓库的 `bravegpuwinner/s2-dev` 是开发归档，包含失败或尚未验证的实验和原型，不代表已验收候选。组员撰写报告请使用[固定源码的团队报告分支](https://github.com/braveloop/flagosgpu/tree/bravegpuwinner/s2-report-review)；该分支单独保留候选、历史结果映射与验证边界。本次开发 checkpoint 仅保存并同步工作区，没有运行测试或更新性能、精度结论。
+
 ## 仓库结构
 
 - `FlagGems/`：FlagGems 子模块，用于 Triton/算子路径开发。

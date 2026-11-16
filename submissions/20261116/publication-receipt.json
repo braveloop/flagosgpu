@@ -1,0 +1,20 @@
+{
+  "share_plan": "S2-20261116-TEAM-REPORT-SHARE",
+  "entry_url": "https://github.com/braveloop/flagosgpu/tree/bravegpuwinner/s2-report-review",
+  "root_commit": "7cd9b18cb3a0ec3af9c3efcfdff63ad1a26b30f9",
+  "root_branch": "bravegpuwinner/s2-report-review",
+  "root_remote_verified": true,
+  "method": "Each exact remote branch verified with git ls-remote after explicit non-force push.",
+  "remote_refs": {
+    "braveloop/flagosgpu:bravegpuwinner/s2-report-review": "7cd9b18cb3a0ec3af9c3efcfdff63ad1a26b30f9",
+    "braveloop/FlagGems:bravegpuwinner/s2-community-candidate": "10d19b55c55cac76ce6573078c4efd0efd39ef3a",
+    "braveloop/FlagGems:bravegpuwinner/s2-bf16-reference": "5276bb367c7de2b102cd8338cfd95f23f096c8eb",
+    "braveloop/vllm-plugin-FL:bravegpuwinner/s2-community-candidate": "e95a90e7ba4245a3635e09d09d04cb879a540ddb",
+    "braveloop/vllm-plugin-FL:bravegpuwinner/s2-bf16-reference": "283a5938255d29c8ceb4e5cb02e58391921e5791"
+  },
+  "official_pr_created": false,
+  "official_event_submitted": false,
+  "runtime_tests_run": false,
+  "full105_run": false,
+  "main_worktree_dirty_preserved": true
+}
