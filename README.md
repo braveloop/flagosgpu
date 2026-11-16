@@ -6,7 +6,7 @@
 
 本分支 `bravegpuwinner/s2-report-review` 供组员准备报告和审阅源码，固定两个候选子模块；共享到自有 fork 不表示已向官方社区或赛事提交。当前整理树尚未真机测试，正确性、稳定吞吐复现和完整精度仍待完成；本轮没有运行 105 题。
 
-先读[结果与源码映射](submissions/20261116/README.md)，再读[候选机制及复现说明](vllm-plugin-FL/docs/competition/bravegpuwinner-s2.md)。[release index](submissions/20261116/release-index.json) 固定两仓完整 SHA、BF16 参考分支和来源；[学习索引](docs/S00-学习索引.md)引导阅读 BI-V150 与 C500 的既有实现资料。历史 BF16 的 102/105 不能继承到当前量化候选。
+先读[结果与源码映射](submissions/20261116/README.md)，再读[候选机制及复现说明](https://github.com/braveloop/vllm-plugin-FL/blob/e95a90e7ba4245a3635e09d09d04cb879a540ddb/docs/competition/bravegpuwinner-s2.md)。[release index](submissions/20261116/release-index.json) 固定两仓完整 SHA、BF16 参考分支和来源；[学习索引](docs/S00-学习索引.md)引导阅读 BI-V150 与 C500 的既有实现资料。历史 BF16 的 102/105 不能继承到当前量化候选。
 
 ## 仓库结构
 
