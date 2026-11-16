@@ -2,6 +2,12 @@
 
 本仓库记录 FlagOS 第二季 MiniCPM5-2B 算子优化比赛的静态分析、分阶段实验计划、可复现学习文档与已完成证据。项目目标是在不改变官方工作负载和模型语义的前提下，对 BI-V150 与 C500 平台进行可验证、可回滚的性能优化。
 
+## 团队报告共享入口
+
+本分支 `bravegpuwinner/s2-report-review` 供组员准备报告和审阅源码，固定两个候选子模块；共享到自有 fork 不表示已向官方社区或赛事提交。当前整理树尚未真机测试，正确性、稳定吞吐复现和完整精度仍待完成；本轮没有运行 105 题。
+
+先读[结果与源码映射](submissions/20261116/README.md)，再读[候选机制及复现说明](vllm-plugin-FL/docs/competition/bravegpuwinner-s2.md)。[release index](submissions/20261116/release-index.json) 固定两仓完整 SHA、BF16 参考分支和来源；[学习索引](docs/S00-学习索引.md)引导阅读 BI-V150 与 C500 的既有实现资料。历史 BF16 的 102/105 不能继承到当前量化候选。
+
 ## 仓库结构
 
 - `FlagGems/`：FlagGems 子模块，用于 Triton/算子路径开发。
@@ -15,7 +21,7 @@
 ## 获取源码
 
 ```bash
-git clone --recurse-submodules git@github.com:braveloop/flagosgpu.git
+git clone --branch bravegpuwinner/s2-report-review --recurse-submodules https://github.com/braveloop/flagosgpu.git
 cd flagosgpu
 git submodule update --init --recursive
 ```
@@ -24,7 +30,7 @@ git submodule update --init --recursive
 
 ## 开发与验证边界
 
-本地工作区只用于源码和文档编辑、静态审查与 Git 同步；不在本机安装项目依赖、编译、导入项目模块或运行模型、测试、性能分析和基准。运行时诊断必须在对应的目标算力环境中完成；正式准确率、基线与提交证据只以组织者认可的 64 GB BI-V150/C500 环境为准。
+本地工作区只用于源码和文档编辑、静态审查与 Git 同步；不在本机安装项目依赖、编译、导入项目模块或运行模型、测试、性能分析和基准。运行时诊断必须在对应的目标算力环境中完成；正式准确率、基线与提交证据以组织者认可的平台和镜像为准；C500 官方硬件要求为 64 GB，租赁预验证不能代替官方资格。
 
 开始工作前请先阅读 [`skills/flagos-minicpm-competition/SKILL.md`](skills/flagos-minicpm-competition/SKILL.md) 与 [`DETAILED_OPTIMIZATION_PLAN.md`](DETAILED_OPTIMIZATION_PLAN.md)，学习记录从 [`docs/S00-学习索引.md`](docs/S00-学习索引.md) 开始。
 

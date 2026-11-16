@@ -1,16 +1,16 @@
 # S01：天数分页 GQA 注意力优化
 
-本篇解释当前 B1 怎样在输入处理阶段复用分页 K/V 历史，并减少在线 softmax 的状态更新。MiniCPM5-2B 的 16 个查询头共用 2 个 KV 头，每个 KV 头对应 8 个查询头；头分组与一次处理多少查询位置是两个维度。当前 kernel 处理 Q2/Q8/Q16 查询 tile，Q8/Q16 的完整共同历史按 128→64→32 个 key 连续划分，因果尾部仍逐 32 个 key 处理。下面沿分页寻址、在线累积和调用入口解释完整实现；Decode 源码见 [S02](S02-天数纯Decode直接序列索引与分页归约优化.md)，Mixed/GEMM/配置加载及唯一精度与正式结果表见 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。
+本篇解释当前 B1 怎样让同一组查询复用分页 K/V 历史，并减少在线 softmax 的状态更新。MiniCPM5-2B 的 16 个查询头共用 2 个 KV 头，每个 KV 头对应 8 个查询头；头分组与一次处理多少查询位置是两个维度。当前 kernel 处理 Q2/Q8/Q16/Q32 查询 tile，Q8 及以上的完整共同历史按 128→64→32 个 key 连续划分，因果尾部仍逐 32 个 key 处理。下面沿分页寻址、在线累积和调用入口解释完整实现；Decode 源码见 [S02](S02-天数纯Decode直接序列索引与分页归约优化.md)，Mixed/GEMM/配置加载及唯一精度与正式结果表见 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。
 
 ## 1. 模型、运行环境与设计目标
 
 模型使用 BF16，42 层，hidden size 2048、intermediate size 6144，查询头/KV 头/每头维度为 16/2/128，最大上下文 131072。KV 缓存每 token 为 `42 × 2 × 2 × 128 × 2 = 43008 bytes`，约 42 KiB；64 个请求各含 16K 输入和 1K 输出约需 44.6 GiB（二进制换算），尚未计入权重、激活和工作区。分页读取成本与服务中的缓存压力因此都可能影响端到端时间，估算不能替代实测峰值。
 
-本版于 2026-10-16 在官方 OnlineLab BI-V150 32 GiB 上验证，设备为 16 SM、warp size 64、每 SM 最大 shared memory 128 KiB。Python 3.12.11、Torch 2.10.0 CoreX、CoreX 4.5.0、FlagTree 0.6.2a3+iluvatar3.6、Triton 3.6 及 site-packages 的 vLLM 0.24 vendor 保持不变，安装包 commit 未确认。FlagGems 基底为 `900531d91192bc5095a9838c9f3b03fc4b5098a0`，plugin 基底为 `c75ae7e02507a2e4cee3b3369ff142318dca2bd0`；当前 KV128 修改尚未提交，不虚构新 commit。目标进程通过原 TRITON_ATTN 枚举的受限实现子类进入，vLLM 保持只读。
+本版于 2026-10-19 在官方 OnlineLab BI-V150 32 GiB 上验证，设备为 16 SM、warp size 64、每 block 与每 SM 的 shared memory 上限均为 128 KiB。Python 3.12.11、Torch 2.10.0 CoreX、CoreX/驱动 4.5.0、IX-ML 4.4.0、FlagTree 0.6.2a3+iluvatar3.6、Triton 3.6 及 site-packages 的 vLLM 0.24 vendor 保持不变，vendor 安装包 commit 未确认。FlagGems 基底为 `cf2e930b70c897c0276bf244a66247d8349d9ee2`，plugin 基底为 `d88e5eed8d1e0afe900875ec09da4c42dab3bbf1`；本次 Q32 改动尚未提交。只读上游参考为 vLLM `ee0da84ab9e04ac7610e28580af62c365e898389`。目标进程仍通过原 TRITON_ATTN 枚举的受限实现子类进入。
 
-本次实际包源码加载位置分别为 `/workspace/bi150-20261016-125500Z-kv128-e2e/src/FlagGems/src/flag_gems/__init__.py` 与 `/workspace/bi150-20261016-125500Z-kv128-e2e/src/vllm-plugin-FL/vllm_fl/__init__.py`；vLLM 来自 `/usr/local/lib/python3.12/site-packages/vllm/__init__.py`。两份工程包属于同一冻结源码副本，vendor vLLM保持只读。该运行身份对应下文完整实现与S03当前结果。
+本次实际包源码加载位置分别为 `/workspace/bi150-20261019-074350Z-q32-final/src/FlagGems/src/flag_gems/__init__.py` 与 `/workspace/bi150-20261019-074350Z-q32-final/src/vllm-plugin-FL/vllm_fl/__init__.py`；vLLM 来自 `/usr/local/lib/python3.12/site-packages/vllm/__init__.py`。两份工程包属于同一冻结源码副本，vendor vLLM 保持只读。该源码加载身份对应下文完整实现与 S03 当前结果。
 
-当前组合保留 Q2/Q8/Q16 Prefill、设备端 32/64-key Decode、Mixed q1 分派及 runtime 数量参数。这里扩大的是完整共同历史的一次 key 分块，不改变 16/2 的查询头/KV 头配置，也不改变选择器和 fallback。相比两个连续 64-key 更新，一个 128-key 更新减少循环、行最大值/指数和更新及累积器重标定次数；总 K/V 字节、QK/PV 矩阵乘工作量和逐分数指数数量并没有因此减少。10 月 12 日旧组合的实际模型 Profile 保留历史热点身份；本版正式评分后另完成单4K初始混合短窗，实际Q16与部分128-key分支的联合证据及范围见S03第1节。
+当前组合在既有 KV128、设备端 32/64-key Decode、Mixed q1 分派及 runtime 数量参数之上，增加自研 Prefill 核的 Q32 变体。Q32 扩大同一 CTA（一个独立执行的线程块）内共同处理的查询位置，不改变 16/2 的查询头/KV 头配置，也不是新的 Attention 数学算法。KV128 将两个连续 64-key 更新合为一个 128-key 更新，减少循环与 softmax 状态重标定，但不因此减少总 K/V 字节或 QK/PV 工作量；Q32 则减少查询 tile 数量、扩大同块查询复用，实际收益须计入资源和完整调用成本，不能只据参数值宣称硬件带宽下降。同窗实际激活与非评分采集边界统一见 S03 第 1 节。
 
 ## 2. 当前 Prefill、共享分页读取与在线 softmax
 
@@ -197,7 +197,7 @@ def iluvatar_paged_gqa_prefill_kernel(
                 )
 ```
 
-有效行检查同时限制序列内位置和打包 token 容量，Mixed 已由 Decode 完成的 q1 序列只在原 SKIP_Q1 条件下跳过。每个 KV 头对应的八个查询头与 QUERY_TILE 相乘，形成 Q2/Q8/Q16 的 16/64/128 行，`m/l/acc` 从空 softmax 状态开始。`full_end` 是最早查询也完全可见的 32-key 对齐历史，因此该前缀可以关闭逐行 causal 判断。只有 Q8/Q16 将其中完整的 128-key 前缀交给新分块，末端不会跨入任一查询的未来位置。
+有效行检查同时限制序列内位置和打包 token 容量，Mixed 已由 Decode 完成的 q1 序列只在原 SKIP_Q1 条件下跳过。每个 KV 头对应的八个查询头与 QUERY_TILE 相乘，形成 Q2/Q8/Q16/Q32 的 16/64/128/256 行，`m/l/acc` 从空 softmax 状态开始；Q32 不是 32 个查询头。`full_end` 是最早查询也完全可见的 32-key 对齐历史，因此该前缀可以关闭逐行 causal 判断。源码条件 `QUERY_TILE >= 8` 同时覆盖 Q8/Q16/Q32，其中完整的 128-key 前缀使用宽分块，末端不会跨入任一查询的未来位置。
 
 ### 2.3 历史余段、因果边界与输出
 
@@ -234,7 +234,7 @@ def iluvatar_paged_gqa_prefill_kernel(
 
 ### 2.4 调用方输出与原入口合同
 
-`paged_gqa_prefill.py` 第 169–189 行。
+`paged_gqa_prefill.py` 第 169–190 行。
 
 ```python
 
@@ -242,8 +242,8 @@ def iluvatar_paged_gqa_prefill_kernel(
 def paged_gqa_prefill(query, key_cache, value_cache, output, query_start_loc, seq_lens, block_table, softmax_scale, *, query_tile=8, skip_q1=False):
     """Fill caller-owned output; bridge owns feature/shape compatibility guards."""
     tokens, sequences = query.shape[0], seq_lens.numel()
-    if type(query_tile) is not int or query_tile not in (2, 8, 16):
-        raise ValueError("query_tile must be 2, 8 or 16")
+    if type(query_tile) is not int or query_tile not in (2, 8, 16, 32):
+        raise ValueError("query_tile must be 2, 8, 16 or 32")
     if type(skip_q1) is not bool:
         raise ValueError("skip_q1 must be a bool")
     if not sequences or not tokens:
@@ -255,15 +255,16 @@ def paged_gqa_prefill(query, key_cache, value_cache, output, query_start_loc, se
         block_table.shape[1], block_table.stride(0),
         query.stride(0), query.stride(1), output.stride(0), output.stride(1),
         *key_cache.stride()[:3], *value_cache.stride()[:3],
-        query_tile, skip_q1, num_warps=8 if query_tile >= 8 else 4, num_stages=1,
+        query_tile, skip_q1,
+        num_warps=16 if query_tile == 32 else (8 if query_tile >= 8 else 4), num_stages=1,
     )
     return output
 ```
 
-Python 入口只接受整数 Q2/Q8/Q16 和真正 bool 的 skip_q1，空 token 或空序列直接返回原 output 对象。数据存在时仍使用原网格与两个 KV 头维度，页表、缓存容量和全部 stride 均来自实际张量，不引入输出分配或逐层主机读取序列长度。Q8/Q16 仍为 8 warps、1 stage，Q2 为 4 warps、1 stage；本机 BI 的 warp 为 64，不能套用 NVIDIA 的占用率假设。bridge 的 Q2/Q8/Q16 密度选择、功能限制和回退不变；资源门实测 Q8/Q16 shared 为 48/64 KiB、reg 均 129、spill 均零，这些是编译资源而非实际 occupancy 结论。
+Python 入口只接受整数 Q2/Q8/Q16/Q32 和真正 bool 的 skip_q1，空 token 或空序列直接返回原 output 对象。数据存在时仍使用原网格与两个 KV 头维度，页表、缓存容量和全部 stride 均来自实际张量，不引入输出分配或逐层主机读取序列长度。Q32 使用 16 warps，Q8/Q16 保持 8 warps，Q2 保持 4 warps，均为 1 stage；本机 warp 为 64，不能套用 NVIDIA 的占用率假设。实际 Q32/KV128 编译的 shared 为 96 KiB、每线程寄存器 124、spill 为零，相比既有 Q16 的 64 KiB shared 增加资源占用，低于本卡 128 KiB 上限不等于已测 occupancy 或带宽结论。bridge 只在最大 query 与整个 batch 平均 query 均至少 32 时选择 Q32，Q2 优先及其他功能限制和 fallback 保留，完整选择逻辑只在 S03 收录。
 
 ## 3. 正确性与正式结果
 
-独立 FP32 参照按块表取 K/V，扩展查询头后显式计算 causal softmax 与加权 V，以 `atol=0.02、rtol=0.02` 检查 BF16 输出，同时记录对原实现的差分。24 个局部用例覆盖 page16/32/48/64/128/256、64/128 边界、非连续合法 stride、失效页、共同历史与因果尾、mixed/empty/q1 跳过、零值/较大量级、调用方输出及输入不变性。Q2 和未进入 128 路径的用例与原实现逐位一致；已进入的新数学路径使用上述 FP32 容差，不能沿用任务重排的 bitwise 判据。
+独立 FP32 参照按块表取 K/V，扩展查询头后显式计算 causal softmax 与加权 V，以 `atol=0.02、rtol=0.02` 检查 BF16 输出，同时记录对原实现的差分。24 个既有回归加 11 个 Q32 新用例全部通过，覆盖 page16/32/48/64/128/256、query31/32/33、64/128 历史边界、非连续合法 stride、失效页与全失效页、共同历史与因果尾、mixed/empty/q1 跳过、零值/较大量级，以及输出所有权和输入不变性。对应仓内回归共 7 项通过，包含 Q32 密度选择和 Mixed 工作区资格。Q32 改变计算分块，按上述 FP32 容差检验，不宣称与 Q16 控制逐位相同。
 
-三组局部完整成本使用真实 B10/9q1、B64/63q1、B31/30q1 的同一层张量各重复 42 次，计入相同 native builder、bridge、partial、merge 和 Prefill 启动，并按原→新→恢复原配对。event/wall 的保守净省分别为 4.78%/4.35%、5.20%/5.98%、3.87%/3.84%，均超过对应实测噪声；这不是 42 个不同层真实数据的整模耗时，也不直接等于端到端吞吐收益。完整组合重新完成 105 题和原 wrapper 两场景各四轮后获准保留，精度、所有请求/token、统计口径与正式增益仅维护于 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)。当前保留范围是 BI-V150，本版跨平台适用路径和最终双平台出口仍未完成。
+局部完整成本使用真实 B10/9q1、B64/63q1、B31/30q1 的同一层张量各重复 42 次，计入一次相同 native builder 以及全部 bridge、partial、merge 和 Prefill 启动，按七组控制→候选→控制交错比较。命中 Q32 的 B10 与 B31 在 event/wall 通道的保守净省分别为 12.88%/12.44% 和 9.93%/9.91%，均超过 5% 与对应配对噪声；B64 的整个 batch 平均 query 不足 32，保持 Q16 且未见可辨回退。这不是 42 个不同层真实数据的整模耗时，也不直接等于端到端吞吐收益。最终 Q32 组合已重新完成完整 105 题与原 wrapper 双场景各四轮，精度、所有请求/token、统计与正式增益只维护于 [S03 第 5 节](S03-天数混合注意力与矩阵访存及配置加载优化.md#5-精度与官方正式结果)；当前保留范围为 BI-V150，适用路径跨平台回归及最终双平台出口仍未完成。

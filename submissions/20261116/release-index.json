@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "release_id": "S2-20261116-TEAM-REPORT-SHARE",
+  "team": "bravegpuwinner",
+  "sharing_status": "team_fork_report_review",
+  "official_submission_status": "blocked_pending_target_runtime",
+  "official_community_pr_created": false,
+  "official_event_zip_submitted": false,
+  "target_server_available": false,
+  "submitted_tree_runtime_verified": false,
+  "submitted_tree_stable_throughput_verified": false,
+  "model_accuracy_verified": false,
+  "full105_run": false,
+  "full105_authorized": false,
+  "root_repository": "https://github.com/braveloop/flagosgpu",
+  "root_branch": "bravegpuwinner/s2-report-review",
+  "root_commit_identity": "Read the enclosing Git commit; intentionally not self-embedded.",
+  "repositories": {
+    "FlagGems": {
+      "url": "https://github.com/braveloop/FlagGems",
+      "path": "FlagGems",
+      "candidate_branch": "bravegpuwinner/s2-community-candidate",
+      "candidate_commit": "10d19b55c55cac76ce6573078c4efd0efd39ef3a",
+      "bf16_branch": "bravegpuwinner/s2-bf16-reference",
+      "bf16_commit": "5276bb367c7de2b102cd8338cfd95f23f096c8eb",
+      "runtime_source_ancestor_commit": "f8d285bdfde506c977dc282c4ea771f760a3a4e6",
+      "sharing_change": "documentation and manifest only",
+      "manifest_path": "FlagGems/submission/manifest.json",
+      "manifest_sha256": "49a8614d9435a61029115c1b22bf20a8fe14aa0f61eb7f2365a19d8e310ec894",
+      "historical_results_path": "FlagGems/submission/historical-results.json",
+      "remote_branch_verification": {
+        "method": "git ls-remote --heads fork exact candidate and BF16 refs",
+        "verified": true,
+        "candidate_remote_sha": "10d19b55c55cac76ce6573078c4efd0efd39ef3a",
+        "bf16_remote_sha": "5276bb367c7de2b102cd8338cfd95f23f096c8eb"
+      }
+    },
+    "vllm-plugin-FL": {
+      "url": "https://github.com/braveloop/vllm-plugin-FL",
+      "path": "vllm-plugin-FL",
+      "candidate_branch": "bravegpuwinner/s2-community-candidate",
+      "candidate_commit": "e95a90e7ba4245a3635e09d09d04cb879a540ddb",
+      "bf16_branch": "bravegpuwinner/s2-bf16-reference",
+      "bf16_commit": "283a5938255d29c8ceb4e5cb02e58391921e5791",
+      "runtime_source_ancestor_commit": "68dc756ed312240424ca7906f0b33210977186ea",
+      "sharing_change": "documentation and manifest only",
+      "manifest_path": "vllm-plugin-FL/submission/manifest.json",
+      "manifest_sha256": "0e83a2b918b37d1fd388b3a340afac2919a42eb21efa976cea2106d877ef8fbb",
+      "historical_results_path": "vllm-plugin-FL/submission/historical-results.json",
+      "remote_branch_verification": {
+        "method": "git ls-remote --heads fork exact candidate and BF16 refs",
+        "verified": true,
+        "candidate_remote_sha": "e95a90e7ba4245a3635e09d09d04cb879a540ddb",
+        "bf16_remote_sha": "283a5938255d29c8ceb4e5cb02e58391921e5791"
+      }
+    },
+    "vllm": {
+      "url": "https://github.com/vllm-project/vllm",
+      "path": "vllm",
+      "commit": "ee0da84ab9e04ac7610e28580af62c365e898389",
+      "role": "read-only upstream reference"
+    }
+  },
+  "documentation": {
+    "candidate_reproduction": "vllm-plugin-FL/docs/competition/bravegpuwinner-s2.md",
+    "learning_index": "docs/S00-学习索引.md"
+  },
+  "historical_result_mapping": {
+    "bf16_bi150": {
+      "experiment_id": "bi150-20261019-074350Z-q32-final",
+      "throughput_tok_s_4k_16k": [
+        3864.1,
+        3164.7
+      ],
+      "math_correct": 102,
+      "math_total": 105,
+      "inherits_to_candidate": false
+    },
+    "bf16_metax": {
+      "throughput_tok_s_4k_16k": [
+        7795.68,
+        8551.02
+      ],
+      "math_correct": 102,
+      "math_total": 105,
+      "scope": "historical rented prevalidation, not organizer qualification",
+      "inherits_to_candidate": false
+    },
+    "candidate_bi150_frozen_history": {
+      "experiment_id": "bi150-20261029-051419Z-bounded-extent-first",
+      "archive_sha256": "92579d259797686cba06d29bc886fb4c164d8ca935b271817fb7eb908b754f1d",
+      "throughput_tok_s_4k_16k": [
+        5034.83,
+        4293.03
+      ],
+      "model_accuracy_verified": false,
+      "submitted_tree_runtime_verified": false
+    }
+  },
+  "publication_scope": "Own forks and team report branch only. No official PR or event submission; no raw evidence, private application material or credentials added."
+}
